@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Plant Disease Detection System
 
 ## Setup
@@ -48,3 +49,6 @@ Ai-ML project/
     ├── signup.html
     └── style.css
 ```
+=======
+# AIML-project
+>>>>>>> 2a98fea09e35912447e55934771fe7e7145aa387

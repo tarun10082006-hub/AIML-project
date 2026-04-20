@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Dashboard – PlantGuard AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="animations.css"/>
+  <link rel="stylesheet" href="premium.css"/>
+  <link rel="stylesheet" href="ultra.css"/>
+  <link rel="stylesheet" href="dashboard.css"/>
+</head>
+<body>
+
+<!-- ── BACKGROUND ── -->
+<div class="bg">
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+</div>
+<canvas id="natureCanvas" style="position:fixed;top:0;left:0;z-index:0;pointer-events:none;"></canvas>
+<div class="particles" id="particles" style="z-index:1;"></div>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo">🌿</div>
+    <div class="sidebar-brand-text">
+      <div class="sidebar-brand-name">PlantGuard</div>
+      <div class="sidebar-brand-sub">AI Platform</div>
+    </div>
+  </div>
+
+  <div class="sidebar-user" id="sidebarUser">
+    <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+    <div class="sidebar-user-info">
+      <div class="sidebar-user-name" id="sidebarName">Loading…</div>
+      <div class="sidebar-user-role">Plant Guardian</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-label">Main</div>
+    <a href="#" class="sidebar-link active" id="sNavDetect" onclick="switchPage('detect');return false;">
+      <span class="sidebar-link-icon">🔬</span>
+      <span class="sidebar-link-text">Detector</span>
+      <span class="sidebar-link-pip"></span>
+    </a>
+    <a href="#" class="sidebar-link" id="sNavHistory" onclick="switchPage('history');return false;">
+      <span class="sidebar-link-icon">📋</span>
+      <span class="sidebar-link-text">History</span>
+    </a>
+    <a href="#" class="sidebar-link" id="sNavStats" onclick="switchPage('stats');return false;">
+      <span class="sidebar-link-icon">📊</span>
+      <span class="sidebar-link-text">Analytics</span>
+    </a>
+
+    <div class="sidebar-nav-label" style="margin-top:8px">Tools</div>
+    <a href="chatbot.html" class="sidebar-link">
+      <span class="sidebar-link-icon">🤖</span>
+      <span class="sidebar-link-text">Plant Doctor</span>
+    </a>
+    <a href="grok.html" class="sidebar-link">
+      <span class="sidebar-link-icon">✨</span>
+      <span class="sidebar-link-text">Gemini AI</span>
+    </a>
+    <a href="profile.html" class="sidebar-link">
+      <span class="sidebar-link-icon">👤</span>
+      <span class="sidebar-link-text">Profile</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-lang">
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="te">తె</button>
+      <button class="lang-btn" data-lang="hi">हि</button>
+    </div>
+    <button class="sidebar-logout" id="logoutBtn">
+      <span>🚪</span><span>Sign Out</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ── SIDEBAR OVERLAY (mobile) ── -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ── TOPBAR ── -->
+<header class="dash-topbar" id="dashTopbar">
+  <button class="dash-hamburger" id="hamburgerBtn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="dash-topbar-title" id="dashPageTitle">🔬 Detector</div>
+  <div class="dash-topbar-right">
+    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
+    <div class="topbar-user" id="topbarUser" style="display:none">
+      <div class="topbar-avatar" id="topbarAvatar"></div>
+      <span id="topbarName"></span>
+    </div>
+  </div>
+</header>
+
+<!-- ── MAIN CONTENT ── -->
+<main class="dash-main" id="dashMain">
+
+  <!-- PAGE: DETECT -->
+  <div class="dash-page active" id="pageDetect">
+    <div class="dash-page-header">
+      <div class="dash-page-eyebrow"><span class="hero-dot"></span> AI Powered</div>
+      <h1 class="dash-page-title">Plant Disease Detector</h1>
+      <p class="dash-page-sub">Upload a leaf photo for instant AI-powered disease diagnosis</p>
+    </div>
+
+    <div class="detect-grid">
+      <!-- Upload card -->
+      <div class="dash-card upload-card">
+        <div class="dash-card-body" style="position:relative">
+          <div class="analyzing-overlay" id="analyzingOverlay">
+            <div class="scan-sweep"></div>
+            <div class="scan-line"></div>
+            <div class="scan-corner tl"></div><div class="scan-corner tr"></div>
+            <div class="scan-corner bl"></div><div class="scan-corner br"></div>
+            <div class="scan-ring"></div>
+            <div class="scan-text">Analyzing leaf…</div>
+            <div class="scan-sub">Running AI model</div>
+          </div>
+
+          <div id="uploadView">
+            <div id="previewWrap" style="display:none;position:relative;margin-bottom:20px">
+              <img id="preview" alt="Leaf preview"/>
+              <button id="removeBtn" title="Remove">✕</button>
+            </div>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="fileInput" accept="image/*"/>
+              <span class="upload-icon">🍃</span>
+              <p data-i18n="detect_drop">Drop your leaf image here</p>
+              <span data-i18n="detect_browse">or click to browse — JPG, PNG, WEBP supported</span>
+            </div>
+            <div class="upload-hint">💡 Best results with clear, close-up photos in good lighting</div>
+            <button class="btn-camera" id="cameraBtn">📷 Use Camera</button>
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+            <div id="cameraPreviewWrap" style="display:none;margin-bottom:12px;position:relative">
+              <video id="cameraStream" autoplay playsinline style="width:100%;max-height:220px;object-fit:cover;border-radius:14px;border:2px solid #bbf7d0"></video>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn-secondary" id="captureBtn">📸 Capture</button>
+                <button class="btn-secondary" id="cancelCameraBtn">✕ Cancel</button>
+              </div>
+              <canvas id="captureCanvas" style="display:none"></canvas>
+            </div>
+            <button class="btn-primary" id="predictBtn">🔬 Analyze Plant Health</button>
+            <div class="msg" id="msg"></div>
+          </div>
+
+          <div id="resultView" style="display:none">
+            <div class="result-box" style="display:block;margin-top:0">
+              <div class="result-header">
+                <div class="result-badge">✓ Diagnosis Complete</div>
+              </div>
+              <div class="result-body">
+                <div class="result-value" id="resultText"></div>
+                <div class="result-sub" id="resultSub"></div>
+                <div id="resultSevBadge" style="margin-top:6px"></div>
+                <div class="confidence-bar"><div class="confidence-fill" id="confBar" style="width:0%"></div></div>
+                <div class="result-confidence" id="confText"></div>
+                <div class="conf-warning" id="confWarning">⚠️ <span id="confWarningText"></span></div>
+                <div class="also-possible" id="alsoSection" style="display:none">
+                  <div class="also-possible-title">🔍 Also possible</div>
+                  <div id="alsoList"></div>
+                </div>
+                <div class="result-actions">
+                  <a href="chatbot.html" class="btn-secondary">🤖 Ask Plant Doctor</a>
+                  <button class="btn-secondary" id="downloadReportBtn">📄 Download Report</button>
+                  <button class="btn-secondary" id="emailReportBtn">📧 Email Report</button>
+                  <button class="btn-copy" id="copyResultBtn">📋 Copy</button>
+                  <button class="btn-secondary" id="newScanBtn">🔄 New Scan</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tips card -->
+      <div class="dash-card tips-card">
+        <div class="dash-card-header">
+          <div class="dash-card-title">📌 Quick Tips</div>
+        </div>
+        <div class="dash-card-body">
+          <div class="tip-item"><span class="tip-icon">☀️</span><span>Use natural lighting for best accuracy</span></div>
+          <div class="tip-item"><span class="tip-icon">🔍</span><span>Focus on the affected leaf area</span></div>
+          <div class="tip-item"><span class="tip-icon">📐</span><span>Keep the leaf flat and fully visible</span></div>
+          <div class="tip-item"><span class="tip-icon">🌿</span><span>One leaf per scan for best results</span></div>
+          <div class="tip-item"><span class="tip-icon">💧</span><span>Avoid wet or dirty leaves if possible</span></div>
+        </div>
+        <div class="dash-card-header" style="margin-top:8px">
+          <div class="dash-card-title">🌱 Supported Plants</div>
+        </div>
+        <div class="dash-card-body">
+          <div class="plant-tags">
+            <span class="plant-tag">🍅 Tomato</span><span class="plant-tag">🌽 Corn</span>
+            <span class="plant-tag">🍇 Grape</span><span class="plant-tag">🍎 Apple</span>
+            <span class="plant-tag">🥔 Potato</span><span class="plant-tag">🫑 Pepper</span>
+            <span class="plant-tag">🍑 Peach</span><span class="plant-tag">🍓 Strawberry</span>
+            <span class="plant-tag">🫘 Soybean</span><span class="plant-tag">🍊 Orange</span>
+            <span class="plant-tag">🫐 Blueberry</span><span class="plant-tag">🍒 Cherry</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: HISTORY -->
+  <div class="dash-page" id="pageHistory">
+    <div class="dash-page-header">
+      <div class="dash-page-eyebrow"><span class="hero-dot"></span> Your Records</div>
+      <h1 class="dash-page-title">Prediction History</h1>
+      <p class="dash-page-sub">All your past plant disease diagnoses</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-body" id="historyContainer" style="min-height:300px">
+        <div class="skeleton-list">
+          <div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: STATS -->
+  <div class="dash-page" id="pageStats">
+    <div class="dash-page-header">
+      <div class="dash-page-eyebrow"><span class="hero-dot"></span> Analytics</div>
+      <h1 class="dash-page-title">Your Dashboard Stats</h1>
+      <p class="dash-page-sub">Overview of all your plant health scans</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-body" id="statsContainer" style="min-height:300px">
+        <div class="skeleton-list">
+          <div class="skeleton-stat-row"></div>
+          <div class="skeleton-row"></div><div class="skeleton-row"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="i18n.js"></script>
+<script src="nature.js"></script>
+<script src="interactions.js"></script>
+<script src="premium.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

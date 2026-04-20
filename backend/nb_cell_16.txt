@@ -1,0 +1,33 @@
+from keras import layers, Model
+
+NUM_CLASSES = 15
+
+base = tf.keras.applications.MobileNetV2(
+    input_shape=(IMG_SIZE, IMG_SIZE, 3),
+    include_top=False,
+    weights='imagenet'
+)
+base.trainable = False
+
+augment = tf.keras.Sequential([
+    layers.RandomFlip('horizontal'),
+    layers.RandomRotation(0.15),
+    layers.RandomZoom(0.1),
+    layers.RandomContrast(0.1),
+], name='augmentation')
+
+inputs  = tf.keras.Input(shape=(IMG_SIZE, IMG_SIZE, 3))
+x       = augment(inputs)
+x       = base(x, training=False)
+x       = layers.GlobalAveragePooling2D()(x)
+x       = layers.Dense(256, activation='relu')(x)
+x       = layers.Dropout(0.3)(x)
+outputs = layers.Dense(NUM_CLASSES, activation='softmax')(x)
+
+model = Model(inputs, outputs)
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(1e-3),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+model.summary()

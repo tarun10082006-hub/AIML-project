@@ -1,0 +1,16 @@
+import matplotlib.pyplot as plt
+
+loss, acc = model.evaluate(val_ds, verbose=1)
+print(f'\n🎯 Final Validation Accuracy : {acc*100:.2f}%')
+print(f'📉 Final Validation Loss     : {loss:.4f}')
+
+acc_all = history1.history['accuracy']     + history2.history['accuracy']
+val_all = history1.history['val_accuracy'] + history2.history['val_accuracy']
+split   = len(history1.history['accuracy'])
+
+plt.figure(figsize=(10, 4))
+plt.plot(acc_all, label='Train', color='#2d6a4f')
+plt.plot(val_all, label='Val',   color='#52b788')
+plt.axvline(x=split, color='gray', linestyle='--', label='Fine-tune start')
+plt.title('Training Accuracy'); plt.xlabel('Epoch'); plt.ylabel('Accuracy')
+plt.legend(); plt.tight_layout(); plt.show()

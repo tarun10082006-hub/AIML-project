@@ -1,0 +1,424 @@
+INFO:     Will watch for changes in these directories: ['c:\\Users\\tarun\\OneDrive\\Documents\\ezyZip\\backend']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [3568] using WatchFiles
+2026-04-19 11:10:37.240219: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-04-19 11:10:38.828560: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\google\api_core\_python_version_support.py:275: FutureWarning: You are using a Python version (3.10.10) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+INFO:     Started server process [23360]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[Groq] llama-3.3-70b-versatile -> HTTP 200
+INFO:     127.0.0.1:54856 - "POST /grok-chat HTTP/1.1" 200 OK
+[Groq] llama-3.3-70b-versatile -> HTTP 200
+INFO:     127.0.0.1:52007 - "POST /grok-chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60418 - "POST /login HTTP/1.1" 200 OK
+2026-04-19 11:14:59.859043: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[model] Loaded legacy 64x64 CNN (38 classes) from model.h5
+INFO:     127.0.0.1:51157 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51157 - "GET /report?disease=Pepper__bell___healthy HTTP/1.1" 200 OK
+[Groq] llama-3.3-70b-versatile -> HTTP 200
+INFO:     127.0.0.1:63215 - "POST /grok-chat HTTP/1.1" 200 OK
+[Gemini] gemini-2.0-flash -> HTTP 429
+[Gemini] 429 body: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota ex
+[Gemini] gemini-2.0-flash-lite -> HTTP 429
+[Gemini] 429 body: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota ex
+[Gemini] gemini-2.5-flash -> HTTP 200
+INFO:     127.0.0.1:62842 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58838 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58838 - "GET /report?disease=Tomato___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58993 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58993 - "GET /report?disease=Tomato___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63070 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63070 - "GET /report?disease=Tomato___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56839 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56839 - "GET /report?disease=Tomato___Tomato_mosaic_virus HTTP/1.1" 200 OK
+[Groq] llama-3.3-70b-versatile -> HTTP 200
+INFO:     127.0.0.1:56169 - "POST /grok-chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59479 - "POST /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59954 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59954 - "GET /report?disease=Tomato___Tomato_mosaic_virus HTTP/1.1" 200 OK
+[Groq] llama-3.3-70b-versatile -> HTTP 200
+INFO:     127.0.0.1:58709 - "POST /grok-chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /history?email=tarun12%40gmail.com&page=1&per_page=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /stats?email=tarun12%40gmail.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62674 - "GET /history?email=tarun12%40gmail.com&page=1&per_page=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51914 - "POST /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51914 - "GET /history?email=tarun12%40gmail.com&page=1&per_page=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51914 - "GET /stats?email=tarun12%40gmail.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "GET /history?email=tarun12%40gmail.com&page=1&per_page=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52464 - "GET /stats?email=tarun9963413@gmail.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52423 - "GET /stats?email=tarun12%40gmail.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63451 - "GET /history?email=tarun12%40gmail.com&page=1&per_page=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54212 - "GET /history?email=tarun12%40gmail.com&page=1&per_page=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63295 - "GET /app/profile.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:49278 - "GET /app/ultra.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:63548 - "GET /app/nature.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:55267 - "GET /app/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:61647 - "GET /app/design-polish.css HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59912 - "GET /app/manifest.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63295 - "GET /app/bg1.png HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49278 - "GET /app/bg2.png HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63548 - "GET /app/bg3.png HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63548 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63548 - "GET /app/sw.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52661 - "GET /app/sw.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63872 - "POST /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51380 - "POST /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56255 - "POST /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51671 - "GET /history?email=tarun12%40gmail.com&page=1&per_page=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51671 - "GET /stats?email=tarun12%40gmail.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57667 - "GET /history?email=tarun12%40gmail.com&page=1&per_page=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55759 - "POST /login HTTP/1.1" 200 OK
+[Groq] llama-3.3-70b-versatile -> HTTP 200
+INFO:     127.0.0.1:59015 - "POST /grok-chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54956 - "POST /send-otp HTTP/1.1" 500 Internal Server Error
+WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+INFO:     127.0.0.1:55229 - "POST /send-otp HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62384 - "POST /send-otp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62444 - "POST /signup HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:57778 - "POST /signup HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62068 - "POST /signup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51165 - "POST /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61727 - "GET /history?email=tarunreddy830938%40gmail.com&page=1&per_page=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61727 - "GET /stats?email=tarunreddy830938%40gmail.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62467 - "GET /history?email=tarunreddy830938%40gmail.com&page=1&per_page=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60581 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60581 - "GET /report?disease=Tomato___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60416 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60416 - "GET /report?disease=Tomato___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64045 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64045 - "GET /report?disease=Tomato___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56546 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56546 - "GET /report?disease=Tomato___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55609 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55609 - "GET /report?disease=Raspberry___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62398 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62398 - "GET /report?disease=Tomato___healthy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55218 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55218 - "GET /report?disease=Pepper__bell___Bacterial_spot HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65389 - "POST /predict HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\pool.py", line 985, in command
+    return command(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\network.py", line 202, in command
+    reply = receive_message(conn, request_id)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\network.py", line 317, in receive_message
+    length, _, response_to, op_code = _UNPACK_HEADER(_receive_data_on_socket(conn, 16, deadline))
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\network.py", line 408, in _receive_data_on_socket
+    raise OSError("connection closed")
+OSError: connection closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 411, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\middleware\proxy_headers.py", line 69, in __call__
+    return await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "c:\Users\tarun\OneDrive\Documents\ezyZip\backend\main.py", line 188, in predict
+    try:
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 658, in insert_one
+    self._insert_one(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 598, in _insert_one
+    self.__database.client._retryable_write(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1569, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1455, in _retry_with_session
+    return self._retry_internal(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\_csot.py", line 108, in csot_wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1501, in _retry_internal
+    ).run()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2352, in run
+    self._check_last_error()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2426, in _check_last_error
+    raise self._last_error
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2347, in run
+    return self._read() if self._is_read else self._write()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2464, in _write
+    return self._func(self._session, conn, self._retryable)  # type: ignore
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 586, in _insert_command
+    result = conn.command(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\helpers.py", line 327, in inner
+    return func(*args, **kwargs)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\pool.py", line 1013, in command
+    self._raise_connection_failure(error)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\pool.py", line 1207, in _raise_connection_failure
+    _raise_connection_failure(self.address, error, timeout_details=details)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\pool.py", line 426, in _raise_connection_failure
+    raise AutoReconnect(msg) from error
+pymongo.errors.AutoReconnect: ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net:27017: connection closed (configured timeouts: connectTimeoutMS: 20000.0ms)
+INFO:     127.0.0.1:61700 - "POST /predict HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 411, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\middleware\proxy_headers.py", line 69, in __call__
+    return await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "c:\Users\tarun\OneDrive\Documents\ezyZip\backend\main.py", line 188, in predict
+    try:
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 658, in insert_one
+    self._insert_one(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 598, in _insert_one
+    self.__database.client._retryable_write(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1569, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1455, in _retry_with_session
+    return self._retry_internal(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\_csot.py", line 108, in csot_wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1501, in _retry_internal
+    ).run()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2347, in run
+    return self._read() if self._is_read else self._write()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2450, in _write
+    self._server = self._get_server()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2433, in _get_server
+    return self._client._select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1316, in _select_server
+    server = topology.select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 369, in select_server
+    server = self._select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 347, in _select_server
+    servers = self.select_servers(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 254, in select_servers
+    server_descriptions = self._select_servers_loop(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 304, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: SSL handshake failed: ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 69e46ad58827c1ec1042a8cf, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+INFO:     127.0.0.1:59030 - "GET /history?email=tarunreddy830938%40gmail.com&page=1&per_page=10 HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 411, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\middleware\proxy_headers.py", line 69, in __call__
+    return await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 193, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\concurrency.py", line 42, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\anyio\to_thread.py", line 33, in run_sync
+    return await get_asynclib().run_sync_in_worker_thread(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\anyio\_backends\_asyncio.py", line 877, in run_sync_in_worker_thread
+    return await future
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\anyio\_backends\_asyncio.py", line 807, in run
+    result = context.run(func, *args)
+  File "c:\Users\tarun\OneDrive\Documents\ezyZip\backend\main.py", line 246, in history
+    return {"heatmap": heatmap_b64}
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 1899, in count_documents
+    return self._retryable_non_cursor_read(_cmd, session, _Op.COUNT)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 1910, in _retryable_non_cursor_read
+    return client._retryable_read(func, self._read_preference_for(s), s, operation)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1534, in _retryable_read
+    return self._retry_internal(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\_csot.py", line 108, in csot_wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1501, in _retry_internal
+    ).run()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2347, in run
+    return self._read() if self._is_read else self._write()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2477, in _read
+    self._server = self._get_server()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2433, in _get_server
+    return self._client._select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1316, in _select_server
+    server = topology.select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 369, in select_server
+    server = self._select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 347, in _select_server
+    servers = self.select_servers(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 254, in select_servers
+    server_descriptions = self._select_servers_loop(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 304, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: SSL handshake failed: ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 69e46ad58827c1ec1042a8cf, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+INFO:     127.0.0.1:59211 - "GET /app/sw.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62540 - "POST /predict HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 411, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\middleware\proxy_headers.py", line 69, in __call__
+    return await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "c:\Users\tarun\OneDrive\Documents\ezyZip\backend\main.py", line 188, in predict
+    try:
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 658, in insert_one
+    self._insert_one(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 598, in _insert_one
+    self.__database.client._retryable_write(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1569, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1455, in _retry_with_session
+    return self._retry_internal(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\_csot.py", line 108, in csot_wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1501, in _retry_internal
+    ).run()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2347, in run
+    return self._read() if self._is_read else self._write()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2450, in _write
+    self._server = self._get_server()
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 2433, in _get_server
+    return self._client._select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1316, in _select_server
+    server = topology.select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 369, in select_server
+    server = self._select_server(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 347, in _select_server
+    servers = self.select_servers(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 254, in select_servers
+    server_descriptions = self._select_servers_loop(
+  File "C:\Users\tarun\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\topology.py", line 304, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: SSL handshake failed: ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 69e46ad58827c1ec1042a8cf, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-00.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-01.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-jihxyi0-shard-00-02.kflvuwe.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:997) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>

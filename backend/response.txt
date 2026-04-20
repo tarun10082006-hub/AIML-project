@@ -1,0 +1,1 @@
+{"code":"The caller does not have permission to execute the specified operation","error":"Your newly created team doesn't have any credits or licenses yet. You can purchase those on https://console.x.ai/team/b9df7310-270b-4655-8bf5-2c1fffa525f0."}

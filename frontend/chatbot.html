@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Plant Doctor AI – PlantGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="chatbot.css"/>
+  <link rel="stylesheet" href="ultra.css"/>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+</div>
+<canvas id="natureCanvas" style="position:fixed;top:0;left:0;z-index:0;pointer-events:none;"></canvas>
+<div class="particles" id="particles" style="z-index: 1;"></div>
+<svg class="leaf-decor tl" viewBox="0 0 300 300" fill="none"><path d="M20 280 Q80 20 280 20 Q240 140 120 200 Q60 230 20 280Z" fill="#10b981"/><path d="M20 280 Q150 150 280 20" stroke="#059669" stroke-width="2" fill="none" opacity=".4"/></svg>
+<svg class="leaf-decor br" viewBox="0 0 300 300" fill="none"><path d="M20 280 Q80 20 280 20 Q240 140 120 200 Q60 230 20 280Z" fill="#6ee7b7"/></svg>
+
+<!-- Topbar -->
+<nav class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-brand-icon">🌿</div>
+    <span>PlantGuard AI</span>
+  </div>
+  <div class="topbar-nav">
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="te">తె</button>
+      <button class="lang-btn" data-lang="hi">हि</button>
+    </div>
+    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
+    <div class="desktop-nav">
+      <a href="index.html" data-i18n="nav_detector">🔬 Detector</a>
+      <a href="chatbot.html" class="active" data-i18n="nav_doctor">🤖 Plant Doctor</a>
+      <a href="grok.html">✨ Gemini AI</a>
+      <a href="profile.html" style="padding:8px 12px">👤</a>
+      <button class="btn-logout" id="logoutBtn" data-i18n="nav_signout">🚪 Sign Out</button>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile drawer overlay -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<!-- Mobile drawer -->
+<aside class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+  <div class="drawer-header">
+    <div class="drawer-brand">
+      <div class="topbar-brand-icon" style="width:40px;height:40px;font-size:1rem">🌿</div>
+      <div>
+        <div style="color:#fff;font-weight:800;font-size:.95rem">PlantGuard AI</div>
+        <div id="drawerUserName" style="color:rgba(167,243,208,.7);font-size:.75rem;margin-top:1px"></div>
+      </div>
+    </div>
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
+  <div class="drawer-section-label">Navigation</div>
+  <nav class="drawer-nav">
+    <a href="index.html" class="drawer-link">
+      <span class="drawer-link-icon">🔬</span>
+      <span data-i18n="nav_detector">Detector</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="chatbot.html" class="drawer-link active">
+      <span class="drawer-link-icon">🤖</span>
+      <span data-i18n="nav_doctor">Plant Doctor</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="grok.html" class="drawer-link">
+      <span class="drawer-link-icon">✨</span>
+      <span>Gemini AI</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="profile.html" class="drawer-link">
+      <span class="drawer-link-icon">👤</span>
+      <span>Profile</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+  </nav>
+  <div class="drawer-section-label" style="margin-top:8px">Language</div>
+  <div class="drawer-lang">
+    <button class="drawer-lang-btn" data-lang="en">🇬🇧 English</button>
+    <button class="drawer-lang-btn" data-lang="te">🇮🇳 తెలుగు</button>
+    <button class="drawer-lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+  </div>
+  <div class="drawer-footer">
+    <button class="drawer-logout" id="drawerLogout">
+      <span>🚪</span> <span data-i18n="nav_signout">Sign Out</span>
+    </button>
+  </div>
+</aside>
+
+<div class="chat-page-body">
+  <div class="chat-wrapper">
+
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <h1 data-i18n="chat_title">🌱 Plant Doctor AI</h1>
+        <p data-i18n="chat_subtitle">Ask me anything about plant diseases, treatments & prevention</p>
+      </div>
+      <div class="chat-header-badge">
+        <div class="online-dot"></div> <span data-i18n="chat_online">Online</span>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message" id="welcomeMsg">
+        <div class="bot-avatar">🤖</div>
+        <div class="message-content">
+          <strong>Plant Doctor AI:</strong> <span id="welcomeText"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <div class="quick-questions">
+        <button class="quick-btn" data-q-key="chat_q_report" data-i18n="chat_btn_report">📋 Full Report</button>
+        <button class="quick-btn" data-q-key="chat_q_symptoms" data-i18n="chat_btn_symptoms">🔍 Symptoms</button>
+        <button class="quick-btn" data-q-key="chat_q_treatment" data-i18n="chat_btn_treatment">💊 Treatment</button>
+        <button class="quick-btn" data-q-key="chat_q_prevention" data-i18n="chat_btn_prevention">🛡️ Prevention</button>
+        <button class="quick-btn" data-q-key="chat_q_severity" data-i18n="chat_btn_severity">⚠️ Severity</button>
+        <button class="quick-btn" data-q-key="chat_q_cause" data-i18n="chat_btn_cause">🦠 Cause</button>
+        <button class="quick-btn" data-q-key="chat_q_organic" data-i18n="chat_btn_organic">🌿 Organic Treatments</button>
+      </div>
+      <div class="input-group">
+        <input type="text" id="chatInput" data-i18n-placeholder="chat_placeholder" placeholder="Ask about symptoms, treatments, prevention…"/>
+        <button id="sendBtn" data-i18n="chat_send">Send →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="i18n.js"></script>
+<script src="nature.js"></script>
+<script>
+  initLangSwitcher();
+  const pc=document.getElementById('particles');
+  // particles disabled for performance
+
+  const API="http://127.0.0.1:8000";
+  const email=localStorage.getItem("user_email");
+  if(!email) window.location.href="login.html";
+
+  const detectedDisease=new URLSearchParams(window.location.search).get('disease')||localStorage.getItem('lastDetectedDisease');
+  if(detectedDisease&&detectedDisease!=='general'){
+    setTimeout(()=>addMessage(t('chat_detected').replace('{disease}',detectedDisease.replace(/_/g,' ')),true),1000);
+  }
+
+  const chatMessages=document.getElementById("chatMessages");
+  const chatInput=document.getElementById("chatInput");
+  const sendBtn=document.getElementById("sendBtn");
+
+  const chatHistory=[];
+
+  function addMessage(content,isBot=false){
+    const div=document.createElement("div");
+    div.className=`message ${isBot?"bot-message":"user-message"}`;
+    if(isBot){
+      div.innerHTML=`<div class="bot-avatar">🤖</div><div class="message-content"><strong>Plant Doctor AI:</strong> ${content}</div>`;
+    }else{
+      div.innerHTML=`<div class="message-content">${content}</div>`;
+    }
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop=chatMessages.scrollHeight;
+  }
+
+  function showTyping(){
+    const div=document.createElement("div");
+    div.className="message bot-message";div.id="typingMsg";
+    div.innerHTML=`<div class="bot-avatar">🤖</div><div class="message-content"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop=chatMessages.scrollHeight;
+    return div;
+  }
+
+  function generateResponse(question){
+    const ctx=localStorage.getItem('lastDetectedDisease')||'general';
+    return fetch(`${API}/chat`,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({disease:ctx,question,lang:getLang(),history:JSON.stringify(chatHistory.slice(-10))})
+    })
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.reply){
+        chatHistory.push({role:'user',content:question});
+        chatHistory.push({role:'assistant',content:d.reply});
+        return d.reply.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+      }
+      return localResponse(question,ctx);
+    })
+    .catch(()=>localResponse(question,ctx));
+  }
+
+  function localResponse(q,ctx){
+    const lq=q.toLowerCase();
+    if(lq.includes('hello')||lq.includes('hi'))
+      return `Hello! 🌱 I'm your Plant Doctor AI. I have expert knowledge on 38 plant diseases. Ask me anything!`;
+    if(lq.includes('thank'))
+      return `You're welcome! 🌿 Feel free to ask me anything else about plant health.`;
+    const disease=ctx&&ctx!=='general'?ctx.replace(/_/g,' ').replace(/___/g,' › '):'your plant';
+    return `<div class="general-advice"><p>You asked: <em>"${q}"</em></p><p>Context: <strong>${disease}</strong></p><p>⚠️ Could not reach the server. Please ensure the backend is running, then try again. You can ask about: <strong>symptoms, cause, treatment, prevention, severity</strong>, or request a <strong>full report</strong>.</p></div>`;
+  }
+
+  function sendMessage(){
+    const message=chatInput.value.trim();if(!message)return;
+    addMessage(message,false);
+    chatInput.value="";sendBtn.disabled=true;
+    const typing=showTyping();
+    generateResponse(message).then(res=>{
+      typing.remove();addMessage(res,true);sendBtn.disabled=false;
+    }).catch(()=>{
+      typing.remove();addMessage(t('chat_error'),true);sendBtn.disabled=false;
+    });
+  }
+
+  sendBtn.addEventListener("click",sendMessage);
+  chatInput.addEventListener("keypress",(e)=>{if(e.key==="Enter")sendMessage()});
+
+  // Render welcome message in current language
+  document.getElementById('welcomeText').innerHTML = t('chat_welcome');
+
+  // Re-render welcome on language switch
+  function onLangChange() {
+    document.getElementById('welcomeText').innerHTML = t('chat_welcome');
+  }
+
+  document.querySelectorAll('.quick-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const q = t(btn.dataset.qKey);
+      addMessage(q,false);
+      const typing=showTyping();
+      generateResponse(q).then(res=>{typing.remove();addMessage(res,true)});
+    });
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click",()=>{
+    localStorage.removeItem("user_email");window.location.href="login.html";
+  });
+
+  // Dark mode
+  const dt=document.getElementById('darkToggle');
+  if(localStorage.getItem('pg_dark')==='1'){document.body.classList.add('dark-mode');dt.textContent='☀️';}
+  dt.addEventListener('click',()=>{const on=document.body.classList.toggle('dark-mode');dt.textContent=on?'☀️':'🌙';localStorage.setItem('pg_dark',on?'1':'0');});
+
+  // Hamburger / Drawer
+  const hamburgerBtn=document.getElementById('hamburgerBtn');
+  const mobileDrawer=document.getElementById('mobileDrawer');
+  const drawerOverlay=document.getElementById('drawerOverlay');
+  function openDrawer(){
+    mobileDrawer.classList.add('open');drawerOverlay.classList.add('show');
+    hamburgerBtn.classList.add('open');hamburgerBtn.setAttribute('aria-expanded','true');
+    mobileDrawer.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+    const n=localStorage.getItem('user_name');
+    document.getElementById('drawerUserName').textContent=n?'Hi, '+n.split(' ')[0]:'';
+    const l=getLang();
+    document.querySelectorAll('.drawer-lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  }
+  function closeDrawer(){
+    mobileDrawer.classList.remove('open');drawerOverlay.classList.remove('show');
+    hamburgerBtn.classList.remove('open');hamburgerBtn.setAttribute('aria-expanded','false');
+    mobileDrawer.setAttribute('aria-hidden','true');document.body.style.overflow='';
+  }
+  hamburgerBtn.addEventListener('click',()=>mobileDrawer.classList.contains('open')?closeDrawer():openDrawer());
+  drawerOverlay.addEventListener('click',closeDrawer);
+  document.getElementById('drawerClose').addEventListener('click',closeDrawer);
+  document.getElementById('drawerLogout').addEventListener('click',()=>{localStorage.removeItem('user_email');window.location.href='login.html';});
+  document.querySelectorAll('.drawer-lang-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{setLang(btn.dataset.lang);document.querySelectorAll('.drawer-lang-btn').forEach(b=>b.classList.toggle('active',b===btn));});
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+
+  // Topbar scroll glass
+  const _tb=document.querySelector('.topbar');
+  window.addEventListener('scroll',()=>_tb.classList.toggle('scrolled',window.scrollY>10),{passive:true});
+</script>
+</body>
+</html>

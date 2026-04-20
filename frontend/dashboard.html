@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Dashboard – PlantGuard AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="animations.css"/>
+  <link rel="stylesheet" href="premium.css"/>
+  <link rel="stylesheet" href="ultra.css"/>
+  <style>
+    .page{display:none;min-height:calc(100vh - 66px);padding-top:calc(66px + 40px);padding-bottom:40px;align-items:flex-start;justify-content:center;}
+    .page.active{display:flex;}
+    .analyzing-overlay{display:none;position:absolute;inset:0;background:rgba(2,12,6,.85);border-radius:inherit;z-index:10;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+    .analyzing-overlay.show{display:flex}
+    .scan-ring{width:80px;height:80px;border-radius:50%;border:3px solid rgba(16,185,129,.2);border-top-color:var(--emerald);animation:spin 1s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .scan-text{color:var(--mint);font-size:.9rem;font-weight:600;letter-spacing:.5px}
+    .scan-sub{color:rgba(167,243,208,.5);font-size:.75rem}
+    .confidence-bar{height:6px;background:#e2e8f0;border-radius:3px;margin-top:10px;overflow:hidden;}
+    .confidence-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#059669,#10b981);transition:width 1s ease;}
+    .result-confidence{font-size:.82rem;color:#059669;font-weight:600;margin-top:6px;}
+    .conf-warning{display:none;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 14px;font-size:.8rem;color:#92400e;margin-top:10px;font-weight:500;}
+    .conf-warning.show{display:flex;align-items:center;gap:8px;}
+    .also-possible{margin-top:14px;padding:12px 16px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;}
+    .also-possible-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px;}
+    .also-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;font-size:.8rem;border-bottom:1px solid #f1f5f9;}
+    .also-row:last-child{border-bottom:none}
+    .also-name{color:#334155;font-weight:500;text-transform:capitalize;}
+    .also-conf{color:#64748b;font-size:.75rem;background:#e2e8f0;border-radius:20px;padding:2px 8px;}
+    .history-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #f1f5f9;font-size:.875rem;}
+    .history-row:last-child{border-bottom:none}
+    .history-disease{font-weight:700;color:var(--text-primary);text-transform:capitalize}
+    .history-meta{color:var(--text-muted);font-size:.78rem;margin-top:2px;}
+    .history-conf{background:#f0fdf4;color:#065f46;border:1px solid #bbf7d0;border-radius:var(--r-full);padding:3px 12px;font-size:.75rem;font-weight:700;white-space:nowrap;}
+    .history-empty{color:var(--text-muted);font-size:.875rem;text-align:center;padding:40px 0;}
+    /* Stats page */
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+    .stat-card{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;border-radius:16px;padding:20px;text-align:center;}
+    .stat-card .s-num{font-size:2rem;font-weight:800;color:#065f46;line-height:1;}
+    .stat-card .s-label{font-size:.75rem;color:#64748b;margin-top:4px;text-transform:uppercase;letter-spacing:.5px;}
+    .top-disease-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:.875rem;}
+    .top-disease-row:last-child{border-bottom:none}
+    .top-rank{width:24px;height:24px;border-radius:50%;background:#065f46;color:#fff;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    /* Severity badges */
+    .sev-high{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:var(--r-full);padding:3px 10px;font-size:.72rem;font-weight:700;white-space:nowrap;}
+    .sev-moderate{background:#fffbeb;color:#d97706;border:1px solid #fde68a;border-radius:var(--r-full);padding:3px 10px;font-size:.72rem;font-weight:700;white-space:nowrap;}
+    .sev-none{background:#f0fdf4;color:#065f46;border:1px solid #bbf7d0;border-radius:var(--r-full);padding:3px 10px;font-size:.72rem;font-weight:700;white-space:nowrap;}
+    .result-sev-badge{display:inline-block;margin-top:8px;padding:4px 14px;border-radius:var(--r-full);font-size:.78rem;font-weight:700;}
+    /* History actions */
+    .history-actions{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+    .btn-del{background:none;border:1px solid #fecaca;color:#dc2626;border-radius:var(--r-full);padding:3px 10px;font-size:.72rem;cursor:pointer;transition:all .2s;}
+    .btn-del:hover{background:#fef2f2;}
+    .history-toolbar{display:flex;justify-content:flex-end;margin-bottom:16px;gap:8px;}
+    .btn-export{padding:7px 16px;background:#f0fdf4;color:#065f46;border:1px solid #bbf7d0;border-radius:var(--r-full);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;}
+    .btn-export:hover{background:#dcfce7;border-color:#10b981;}
+    /* Camera button */
+    .btn-camera{width:100%;padding:11px;background:#f0fdf4;color:#065f46;border:1.5px solid #bbf7d0;border-radius:var(--r-md);font-size:.875rem;font-weight:600;cursor:pointer;margin-bottom:12px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Inter',sans-serif;}
+    .btn-camera:hover{background:#dcfce7;border-color:#10b981;}
+  </style>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+</div>
+<canvas id="natureCanvas" style="position:fixed;top:0;left:0;z-index:0;pointer-events:none;"></canvas>
+<div class="particles" id="particles" style="z-index: 1;"></div>
+<svg class="leaf-decor tl" viewBox="0 0 400 400" fill="none" style="z-index: 2;">
+  <path d="M30 370 Q60 40 370 30 Q310 160 180 240 Q90 290 30 370Z" fill="#059669" opacity=".9"/>
+  <path d="M30 370 Q200 200 370 30" stroke="#34d399" stroke-width="2.5" fill="none" opacity=".6"/>
+  <path d="M30 370 Q130 240 280 80" stroke="#6ee7b7" stroke-width="1.5" fill="none" opacity=".4"/>
+</svg>
+<svg class="leaf-decor br" viewBox="0 0 400 400" fill="none">
+  <path d="M30 370 Q60 40 370 30 Q310 160 180 240 Q90 290 30 370Z" fill="#10b981" opacity=".85"/>
+  <path d="M30 370 Q200 200 370 30" stroke="#6ee7b7" stroke-width="2" fill="none" opacity=".5"/>
+</svg>
+<svg class="leaf-decor ml" viewBox="0 0 300 300" fill="none">
+  <path d="M20 280 Q50 30 280 20 Q240 130 130 190 Q65 225 20 280Z" fill="#047857" opacity=".8"/>
+  <path d="M20 280 Q150 150 280 20" stroke="#34d399" stroke-width="2" fill="none" opacity=".4"/>
+</svg>
+
+<!-- Topbar -->
+<nav class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-brand-icon">🌿</div>
+    <span>PlantGuard AI</span>
+  </div>
+  <div class="topbar-nav">
+    <div id="topbarUser" class="topbar-user" style="display:none">
+      <div class="topbar-avatar" id="topbarAvatar"></div>
+      <span id="topbarName"></span>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="te">తె</button>
+      <button class="lang-btn" data-lang="hi">हि</button>
+    </div>
+    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
+    <!-- Desktop nav links -->
+    <div class="desktop-nav">
+      <a href="#" id="navDetect" class="active" onclick="switchPage('detect');return false;" data-i18n="nav_detector">🔬 Detector</a>
+      <a href="#" id="navHistory" onclick="switchPage('history');return false;" data-i18n="nav_history">📋 History</a>
+      <a href="#" id="navStats" onclick="switchPage('stats');return false;" data-i18n="nav_stats">📊 Stats</a>
+      <a href="chatbot.html" data-i18n="nav_doctor">🤖 Plant Doctor</a>
+      <a href="grok.html">✨ Gemini AI</a>
+      <a href="profile.html" title="Profile" style="padding:8px 12px">👤</a>
+      <button class="btn-logout" id="logoutBtn" data-i18n="nav_signout">🚪 Sign Out</button>
+    </div>
+    <!-- Hamburger button (mobile) -->
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile drawer overlay -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<!-- Mobile drawer -->
+<aside class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+  <div class="drawer-header">
+    <div class="drawer-brand">
+      <div class="topbar-brand-icon" style="width:40px;height:40px;font-size:1rem">🌿</div>
+      <div>
+        <div style="color:#fff;font-weight:800;font-size:.95rem">PlantGuard AI</div>
+        <div id="drawerUserName" style="color:rgba(167,243,208,.7);font-size:.75rem;margin-top:1px"></div>
+      </div>
+    </div>
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
+
+  <div class="drawer-section-label">Navigation</div>
+  <nav class="drawer-nav">
+    <a href="#" class="drawer-link active" id="dNavDetect" onclick="switchPage('detect');closeDrawer();return false;">
+      <span class="drawer-link-icon">🔬</span>
+      <span data-i18n="nav_detector">Detector</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="#" class="drawer-link" id="dNavHistory" onclick="switchPage('history');closeDrawer();return false;">
+      <span class="drawer-link-icon">📋</span>
+      <span data-i18n="nav_history">History</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="#" class="drawer-link" id="dNavStats" onclick="switchPage('stats');closeDrawer();return false;">
+      <span class="drawer-link-icon">📊</span>
+      <span data-i18n="nav_stats">Stats</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="chatbot.html" class="drawer-link">
+      <span class="drawer-link-icon">🤖</span>
+      <span data-i18n="nav_doctor">Plant Doctor</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="grok.html" class="drawer-link">
+      <span class="drawer-link-icon">✨</span>
+      <span>Gemini AI</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="profile.html" class="drawer-link">
+      <span class="drawer-link-icon">👤</span>
+      <span>Profile</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+  </nav>
+
+  <div class="drawer-section-label" style="margin-top:8px">Language</div>
+  <div class="drawer-lang">
+    <button class="drawer-lang-btn" data-lang="en">🇬🇧 English</button>
+    <button class="drawer-lang-btn" data-lang="te">🇮🇳 తెలుగు</button>
+    <button class="drawer-lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+  </div>
+
+  <div class="drawer-footer">
+    <button class="drawer-logout" id="drawerLogout">
+      <span>🚪</span> <span data-i18n="nav_signout">Sign Out</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ═══ PAGE: DETECT ═══ -->
+<div class="page active" id="pageDetect">
+  <div class="dashboard-card" style="width:min(580px,94vw);margin:0;">
+    <div class="dashboard-hero">
+      <div class="hero-badge"><div class="hero-dot"></div> <span data-i18n="detect_badge">AI Powered</span></div>
+      <h1 data-i18n="detect_title">Plant Disease Detector</h1>
+      <p data-i18n="detect_subtitle">Upload a leaf photo for instant AI-powered disease diagnosis</p>
+    </div>
+    <div class="dashboard-body-inner" style="position:relative">
+      <div class="analyzing-overlay" id="analyzingOverlay">
+        <div class="scan-sweep"></div>
+        <div class="scan-line"></div>
+        <div class="scan-corner tl"></div>
+        <div class="scan-corner tr"></div>
+        <div class="scan-corner bl"></div>
+        <div class="scan-corner br"></div>
+        <div class="scan-ring"></div>
+        <div class="scan-text" data-i18n="detect_overlay_text">Analyzing leaf…</div>
+        <div class="scan-sub" data-i18n="detect_overlay_sub">Running AI model</div>
+      </div>
+      <div id="uploadView">
+        <div id="previewWrap" style="display:none;position:relative;margin-bottom:20px">
+          <img id="preview" alt="Leaf preview" style="width:100%;max-height:220px;object-fit:cover;border-radius:14px;border:2px solid #bbf7d0;box-shadow:0 8px 24px rgba(0,0,0,.12);display:block"/>
+          <button id="removeBtn" title="Remove image" style="position:absolute;top:8px;right:8px;background:rgba(239,68,68,.85);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:1rem;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3)">✕</button>
+        </div>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept="image/*"/>
+          <span class="upload-icon">🍃</span>
+          <p data-i18n="detect_drop">Drop your leaf image here</p>
+          <span data-i18n="detect_browse">or click to browse — JPG, PNG, WEBP supported</span>
+        </div>
+        <button class="btn-camera" id="cameraBtn" data-i18n="detect_camera">📷 Use Camera</button>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none"/>
+        <!-- Live camera preview -->
+        <div id="cameraPreviewWrap" style="display:none;margin-bottom:12px;position:relative">
+          <video id="cameraStream" autoplay playsinline style="width:100%;max-height:220px;object-fit:cover;border-radius:14px;border:2px solid #bbf7d0"></video>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn-secondary" id="captureBtn">📸 Capture</button>
+            <button class="btn-secondary" id="cancelCameraBtn">✕ Cancel</button>
+          </div>
+          <canvas id="captureCanvas" style="display:none"></canvas>
+        </div>
+        <button class="btn-primary" id="predictBtn" data-i18n="detect_analyze">🔬 Analyze Plant Health</button>
+        <div class="msg" id="msg"></div>
+      </div>
+      <div id="resultView" style="display:none">
+        <div class="result-box" style="display:block;margin-top:0">
+          <div class="result-header">
+            <div class="result-badge" data-i18n="detect_diagnosis">✓ Diagnosis Complete</div>
+          </div>
+          <div class="result-body">
+            <div class="result-value" id="resultText"></div>
+            <div class="result-sub" id="resultSub">Analysis complete — results below</div>
+            <div id="resultSevBadge" style="margin-top:6px"></div>
+            <div class="confidence-bar"><div class="confidence-fill" id="confBar" style="width:0%"></div></div>
+            <div class="result-confidence" id="confText"></div>
+            <div class="conf-warning" id="confWarning">⚠️ <span id="confWarningText"></span></div>
+            <div class="also-possible" id="alsoSection" style="display:none">
+              <div class="also-possible-title">🔍 Also possible</div>
+              <div id="alsoList"></div>
+            </div>
+            <div class="result-actions">
+              <a href="chatbot.html" class="btn-secondary" data-i18n="detect_ask_doctor">🤖 Ask Plant Doctor</a>
+              <button class="btn-secondary" id="downloadReportBtn" data-i18n="detect_download">📄 Download Report</button>
+              <button class="btn-secondary" id="emailReportBtn" data-i18n="detect_email">📧 Email Report</button>
+              <button class="btn-copy" id="copyResultBtn">📋 Copy</button>
+              <button class="btn-secondary" id="newScanBtn" data-i18n="detect_new_scan">🔄 New Scan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: HISTORY ═══ -->
+<div class="page" id="pageHistory">
+  <div class="dashboard-card" style="width:min(680px,94vw);margin:0;">
+    <div class="dashboard-hero">
+      <div class="hero-badge"><div class="hero-dot"></div> <span data-i18n="history_badge">Your Records</span></div>
+      <h1 data-i18n="history_title">Prediction History</h1>
+      <p data-i18n="history_subtitle">All your past plant disease diagnoses</p>
+    </div>
+    <div class="dashboard-body-inner" id="historyContainer" style="padding:28px 36px;min-height:300px;">
+      <div class="skeleton-list">
+        <div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: STATS ═══ -->
+<div class="page" id="pageStats">
+  <div class="dashboard-card" style="width:min(680px,94vw);margin:0;">
+    <div class="dashboard-hero">
+      <div class="hero-badge"><div class="hero-dot"></div> <span data-i18n="stats_badge">Analytics</span></div>
+      <h1 data-i18n="stats_title">Your Dashboard Stats</h1>
+      <p data-i18n="stats_subtitle">Overview of all your plant health scans</p>
+    </div>
+    <div class="dashboard-body-inner" id="statsContainer" style="padding:28px 36px;min-height:300px;">
+      <div class="skeleton-list">
+        <div class="skeleton-stat-row"></div>
+        <div class="skeleton-row"></div><div class="skeleton-row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="i18n.js"></script>
+<script src="nature.js"></script>
+<script src="interactions.js"></script>
+<script src="premium.js"></script>
+<script>
+  initLangSwitcher();
+
+  // ── Toast system ──
+  function toast(msg, type='success'){
+    const icons={success:'✅',error:'❌',info:'ℹ️'};
+    const c=document.getElementById('toast-container');
+    const el=document.createElement('div');
+    el.className=`toast toast-${type}`;
+    el.innerHTML=`<span class="toast-icon">${icons[type]}</span><span>${msg}</span>`;
+    c.appendChild(el);
+    el.addEventListener('click',()=>removeToast(el));
+    setTimeout(()=>removeToast(el),3500);
+  }
+  function removeToast(el){
+    el.classList.add('removing');
+    setTimeout(()=>el.remove(),250);
+  }
+
+  // ── Dark mode ──
+  const darkToggle=document.getElementById('darkToggle');
+  if(localStorage.getItem('pg_dark')==='1'){document.body.classList.add('dark-mode');darkToggle.textContent='☀️';}
+  darkToggle.addEventListener('click',()=>{
+    const on=document.body.classList.toggle('dark-mode');
+    darkToggle.textContent=on?'☀️':'🌙';
+    localStorage.setItem('pg_dark',on?'1':'0');
+  });
+
+  const API="http://127.0.0.1:8000";
+  const email=localStorage.getItem("user_email");
+  if(!email) window.location.href="login.html";
+
+  // ── User greeting ──
+  const uname=localStorage.getItem('user_name');
+  if(uname){
+    document.getElementById('topbarUser').style.display='flex';
+    document.getElementById('topbarAvatar').textContent=uname.charAt(0).toUpperCase();
+    document.getElementById('topbarName').textContent='Hi, '+uname.split(' ')[0];
+  }
+
+  function switchPage(page){
+    const order = ['detect','history','stats'];
+    const pages = ['detect','history','stats'];
+    const currentPage = pages.find(p => document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1)).classList.contains('active')) || 'detect';
+    if(currentPage === page) return;
+    const fromIdx = order.indexOf(currentPage);
+    const toIdx   = order.indexOf(page);
+    const goRight = toIdx > fromIdx;
+
+    const fromEl = document.getElementById('page'+currentPage.charAt(0).toUpperCase()+currentPage.slice(1));
+    const toEl   = document.getElementById('page'+page.charAt(0).toUpperCase()+page.slice(1));
+
+    // Exit current
+    fromEl.classList.add(goRight ? 'page-exit-left' : 'page-exit-right');
+    setTimeout(() => {
+      fromEl.classList.remove('active','page-exit-left','page-exit-right');
+      // Enter new
+      toEl.classList.add('active', goRight ? 'page-enter-right' : 'page-enter-left');
+      setTimeout(() => toEl.classList.remove('page-enter-right','page-enter-left'), 600);
+    }, 280);
+
+    // Update nav active states
+    ['detect','history','stats'].forEach(p => {
+      const nav = document.getElementById('nav'+p.charAt(0).toUpperCase()+p.slice(1));
+      if(nav) nav.classList.toggle('active', p===page);
+      const dNav = document.getElementById('dNav'+p.charAt(0).toUpperCase()+p.slice(1));
+      if(dNav) dNav.classList.toggle('active', p===page);
+    });
+
+    if(page==='history') setTimeout(()=>loadHistory(), 300);
+    if(page==='stats')   setTimeout(()=>loadStats(),   300);
+  }
+
+  const fileInput=document.getElementById("fileInput");
+  const preview=document.getElementById("preview");
+  const uploadZone=document.getElementById("uploadZone");
+  const predictBtn=document.getElementById("predictBtn");
+  const msg=document.getElementById("msg");
+  const overlay=document.getElementById("analyzingOverlay");
+  const previewWrap=document.getElementById("previewWrap");
+  const uploadView=document.getElementById("uploadView");
+  const resultView=document.getElementById("resultView");
+
+  window.showPreview = function showPreview(file){
+    preview.src=URL.createObjectURL(file);
+    previewWrap.style.display="block";
+    uploadZone.style.display="none";
+    msg.textContent="";
+  }
+
+  window.clearPreview = function clearPreview(){
+    preview.src="";
+    previewWrap.style.display="none";
+    uploadZone.style.display="block";
+    uploadView.style.display="block";
+    resultView.style.display="none";
+    msg.textContent="";
+    fileInput.value="";
+    document.getElementById('confWarning').classList.remove('show');
+    document.getElementById('alsoSection').style.display='none';
+  }
+
+  // Camera live preview
+  let cameraStream = null;
+  document.getElementById('cameraBtn').addEventListener('click', async () => {
+    const wrap = document.getElementById('cameraPreviewWrap');
+    const video = document.getElementById('cameraStream');
+    // On mobile, fall back to file input
+    if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+      document.getElementById('cameraInput').click(); return;
+    }
+    try {
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      video.srcObject = cameraStream;
+      wrap.style.display = 'block';
+      document.getElementById('uploadZone').style.display = 'none';
+    } catch {
+      document.getElementById('cameraInput').click();
+    }
+  });
+  document.getElementById('captureBtn').addEventListener('click', () => {
+    const video = document.getElementById('cameraStream');
+    const canvas = document.getElementById('captureCanvas');
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    canvas.toBlob(blob => {
+      const file = new File([blob], 'camera_capture.jpg', { type: 'image/jpeg' });
+      const dt = new DataTransfer(); dt.items.add(file);
+      fileInput.files = dt.files;
+      showPreview(file);
+      stopCamera();
+    }, 'image/jpeg', 0.9);
+  });
+  document.getElementById('cancelCameraBtn').addEventListener('click', stopCamera);
+  function stopCamera() {
+    if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+    document.getElementById('cameraPreviewWrap').style.display = 'none';
+    document.getElementById('uploadZone').style.display = 'block';
+  }
+
+  document.getElementById('cameraInput').addEventListener('change',(e)=>{const f=e.target.files[0];if(f){fileInput.files=e.target.files;showPreview(f);}});
+
+  fileInput.addEventListener("change",(e)=>{const f=e.target.files[0];if(f)showPreview(f);});
+  document.getElementById("removeBtn").addEventListener("click",clearPreview);
+  document.getElementById("newScanBtn").addEventListener("click",clearPreview);
+
+  uploadZone.addEventListener("dragover",(e)=>{e.preventDefault();uploadZone.classList.add("dragover")});
+  uploadZone.addEventListener("dragleave",()=>uploadZone.classList.remove("dragover"));
+  uploadZone.addEventListener("drop",(e)=>{
+    e.preventDefault();uploadZone.classList.remove("dragover");
+    const f=e.dataTransfer.files[0];if(!f)return;
+    fileInput.files=e.dataTransfer.files;showPreview(f);
+  });
+
+  // Severity helpers
+  const SEV_HIGH=['high','critical','very high'];
+  function sevClass(sev){
+    const s=(sev||'').toLowerCase();
+    if(SEV_HIGH.some(w=>s.includes(w))) return 'sev-high';
+    if(s.includes('moderate')) return 'sev-moderate';
+    if(s==='none') return 'sev-none';
+    return 'sev-moderate';
+  }
+  function sevIcon(sev){
+    const s=(sev||'').toLowerCase();
+    if(SEV_HIGH.some(w=>s.includes(w))) return '🔴';
+    if(s.includes('moderate')) return '🟡';
+    if(s==='none') return '🟢';
+    return '⚪';
+  }
+
+  predictBtn.addEventListener("click",async()=>{
+    if(!fileInput.files[0]){toast(t('detect_no_image'),'error');return;}
+    predictBtn.disabled=true;predictBtn.textContent=t('detect_analyzing');
+    overlay.classList.add("show");
+    const form=new FormData();
+    form.append("email",email);
+    form.append("file",fileInput.files[0]);
+    try{
+      const res=await fetch(`${API}/predict`,{method:"POST",body:form});
+      const data=await res.json();
+      overlay.classList.remove("show");
+      if(res.ok){
+        document.getElementById("resultText").textContent=data.prediction.replace(/_/g," ");
+        const isHealthyResult = data.prediction.toLowerCase().includes('healthy');
+        document.getElementById('resultSub').textContent = isHealthyResult
+          ? t('detect_healthy')
+          : t('detect_diseased');
+        const pct=data.confidence?(data.confidence*100).toFixed(1):null;
+        document.getElementById("confBar").style.width=pct?pct+"%":"0%";
+        document.getElementById("confText").textContent=pct?`${t('detect_confidence')} ${pct}%`:"";
+        // Confidence warning
+        const warn=document.getElementById('confWarning');
+        const conf=data.confidence||0;
+        if(conf>0 && conf<0.75){
+          document.getElementById('confWarningText').textContent=
+            getLang()==='te'?
+            'AI కొంచెం నిశ్చితంగా ఉంది — మంచి వెలుతురులో మళ్ళీ ప్రయత్నించండి':
+            getLang()==='hi'?
+            'AI थोडा अनिश्चित है — अच्छी रोशनी में दोबारा कोशिश करें':
+            'The AI isn’t fully confident here. Try retaking the photo in better lighting for a more accurate result.';
+          warn.classList.add('show');
+        }else{warn.classList.remove('show');}
+        // Top 3 also-possible
+        const top3=(data.top3||[]).slice(1).filter(x=>x.confidence>0.03);
+        const alsoSection=document.getElementById('alsoSection');
+        if(top3.length){
+          document.getElementById('alsoList').innerHTML=top3.map(x=>
+            `<div class="also-row"><span class="also-name">${x.label.replace(/___/g,' › ').replace(/_/g,' ')}</span><span class="also-conf">${(x.confidence*100).toFixed(1)}%</span></div>`
+          ).join('');
+          alsoSection.style.display='block';
+        }else{alsoSection.style.display='none';}
+        localStorage.setItem("lastDetectedDisease",data.prediction);
+        try{
+          const rr=await fetch(`${API}/report?disease=${encodeURIComponent(data.prediction)}`);
+          const rd=await rr.json();
+          const sev=rd.info?.severity||'';
+          document.getElementById('resultSevBadge').innerHTML=
+            `<span class="result-sev-badge ${sevClass(sev)}">${sevIcon(sev)} ${sev||'Unknown severity'}</span>`;
+        }catch{document.getElementById('resultSevBadge').innerHTML='';}
+        uploadView.style.display="none";
+        resultView.style.display="block";
+        toast('Diagnosis complete!','success');
+      }else{
+        toast(data.detail||"Prediction failed.",'error');
+      }
+    }catch{
+      overlay.classList.remove("show");
+      toast(t('detect_error_server'),'error');
+    }finally{
+      predictBtn.disabled=false;predictBtn.textContent=t('detect_analyze');
+    }
+  });
+
+  // ── Copy result ──
+  document.getElementById('copyResultBtn').addEventListener('click',()=>{
+    const text=document.getElementById('resultText').textContent;
+    const conf=document.getElementById('confText').textContent;
+    navigator.clipboard.writeText(`${text} | ${conf}`).then(()=>{
+      const btn=document.getElementById('copyResultBtn');
+      btn.textContent='✓ Copied';btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);
+    });
+  });
+
+  document.getElementById("emailReportBtn").addEventListener("click", async () => {
+    const disease = localStorage.getItem("lastDetectedDisease");
+    if (!disease) return;
+    const btn = document.getElementById("emailReportBtn");
+    btn.disabled = true; btn.textContent = getLang()==='te' ? 'పంపుతోంది…' : 'Sending…';
+    try {
+      const conf = document.getElementById("confText").textContent;
+      const form = new FormData();
+      form.append('email', email);
+      form.append('disease', disease);
+      form.append('confidence', conf);
+      const res = await fetch(`${API}/email-report`, {method:'POST', body:form});
+      if (res.ok) toast(getLang()==='te' ? 'నివేదిక మీ ఇమెయిల్కు పంపబడింది!' : 'Report sent to your email!', 'success');
+      else toast(getLang()==='te' ? 'ఇమెయిల్ పంపడం విఫలమైంది.' : 'Failed to send email.', 'error');
+    } catch { toast('Failed to send email.', 'error'); }
+    finally { btn.disabled=false; btn.textContent=getLang()==='te'?'📧 ఇమెయిల్ నివేదిక':t('detect_email'); }
+  });
+
+  document.getElementById("downloadReportBtn").addEventListener("click", async () => {
+    const disease = localStorage.getItem("lastDetectedDisease");
+    if (!disease) return;
+    const btn = document.getElementById("downloadReportBtn");
+    btn.disabled = true; btn.textContent = t('detect_generating');
+    try {
+      const res = await fetch(`${API}/report?disease=${encodeURIComponent(disease)}`);
+      const data = await res.json();
+      const info = data.info;
+      const name = info.disease.replace(/___/g, " › ").replace(/_/g, " ");
+      const conf = document.getElementById("confText").textContent;
+      const imgSrc = document.getElementById("preview").src;
+      const date = new Date().toLocaleString();
+      const isTE = getLang() === 'te';
+      const reportSubtitle = isTE ? 'మొక్కల వ్యాధి గుర్తింపు నివేదిక' : 'Plant Disease Detection Report';
+      const reportGenerated = isTE ? 'తయారైన తేదీ' : 'Generated';
+      const reportFooter = isTE ? 'PlantGuard AI — AI-రూపొందించిన నివేదిక. క్లిష్టమైన నిర్ణయాల కోసం వ్యవసాయ నిపుణుడితో ధృవీకరించండి.' : 'PlantGuard AI — AI-generated report. Verify with an agronomist for critical decisions.';
+      const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
+<title>PlantGuard Report – ${name}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans Telugu','Segoe UI',Arial,sans-serif;color:#1a1a1a;background:#fff;padding:40px;max-width:720px;margin:0 auto;}
+  .header{display:flex;align-items:center;gap:16px;border-bottom:3px solid #059669;padding-bottom:20px;margin-bottom:28px;}
+  .logo{font-size:2.2rem;}
+  .brand{font-size:1.4rem;font-weight:800;color:#059669;}
+  .brand small{display:block;font-size:.75rem;font-weight:400;color:#64748b;margin-top:2px;}
+  .badge{margin-left:auto;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:6px 16px;font-size:.8rem;font-weight:700;color:#065f46;}
+  .disease-name{font-size:1.6rem;font-weight:800;color:#0f172a;margin-bottom:6px;text-transform:capitalize;}
+  .meta{font-size:.82rem;color:#64748b;margin-bottom:24px;}
+  .img-wrap{text-align:center;margin-bottom:24px;}
+  .img-wrap img{max-width:320px;max-height:220px;object-fit:cover;border-radius:12px;border:2px solid #bbf7d0;}
+  .conf-row{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+  .conf-bar-wrap{flex:1;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;}
+  .conf-bar-fill{height:100%;background:linear-gradient(90deg,#059669,#10b981);border-radius:4px;}
+  .conf-label{font-size:.85rem;font-weight:700;color:#059669;white-space:nowrap;}
+  .section{margin-bottom:20px;padding:16px 20px;border-radius:10px;background:#f8fafc;border-left:4px solid #059669;}
+  .section-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:6px;}
+  .section-body{font-size:.9rem;line-height:1.65;color:#334155;}
+  .footer{margin-top:36px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:.75rem;color:#94a3b8;text-align:center;}
+  @media print{body{padding:20px;}@page{margin:1.5cm;size:A4;}}
+</style></head><body>
+<div class="header"><div class="logo">🌿</div><div><div class="brand">PlantGuard AI<small>${reportSubtitle}</small></div></div><div class="badge">${t('detect_diagnosis')}</div></div>
+<div class="disease-name">${name}</div>
+<div class="meta">${reportGenerated}: ${date} &nbsp;|&nbsp; ${email}</div>
+${imgSrc&&imgSrc!==window.location.href?`<div class="img-wrap"><img src="${imgSrc}" alt="Analyzed leaf"/></div>`:''}
+${conf?`<div class="conf-row"><div class="conf-bar-wrap"><div class="conf-bar-fill" style="width:${document.getElementById('confBar').style.width}"></div></div><div class="conf-label">${conf}</div></div>`:''}
+<div class="section"><div class="section-title">${t('chat_btn_severity')}</div><div class="section-body">${info.severity}</div></div>
+<div class="section"><div class="section-title">${t('chat_btn_cause')}</div><div class="section-body">${info.cause}</div></div>
+<div class="section"><div class="section-title">${t('chat_btn_symptoms')}</div><div class="section-body">${info.symptoms}</div></div>
+<div class="section"><div class="section-title">${t('chat_btn_treatment')}</div><div class="section-body">${info.treatment}</div></div>
+<div class="section"><div class="section-title">${t('chat_btn_prevention')}</div><div class="section-body">${info.prevention}</div></div>
+<div class="footer">${reportFooter}</div>
+</body></html>`;
+      const win = window.open('', '_blank');
+      win.document.write(html);
+      win.document.close();
+      win.onload = () => { win.focus(); win.print(); };
+      toast('Report ready!','success');
+    } catch {
+      toast(t('detect_report_error'),'error');
+    } finally {
+      btn.disabled = false; btn.textContent = t('detect_download');
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click",()=>{
+    localStorage.removeItem("user_email");
+    localStorage.removeItem("user_name");
+    window.location.href="login.html";
+  });
+
+  // ── Hamburger / Drawer ──
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileDrawer = document.getElementById('mobileDrawer');
+  const drawerOverlay = document.getElementById('drawerOverlay');
+
+  function openDrawer(){
+    mobileDrawer.classList.add('open');
+    drawerOverlay.classList.add('show');
+    hamburgerBtn.classList.add('open');
+    hamburgerBtn.setAttribute('aria-expanded','true');
+    mobileDrawer.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    // sync drawer user name
+    const n=localStorage.getItem('user_name');
+    document.getElementById('drawerUserName').textContent=n?'Hi, '+n.split(' ')[0]:'';
+    // sync active drawer link
+    const active=document.querySelector('.topbar-nav .desktop-nav a.active');
+    document.querySelectorAll('.drawer-link').forEach(l=>l.classList.remove('active'));
+    if(active){
+      const map={'navDetect':'dNavDetect','navHistory':'dNavHistory','navStats':'dNavStats'};
+      const dId=map[active.id];
+      if(dId) document.getElementById(dId)?.classList.add('active');
+    }
+  }
+  function closeDrawer(){
+    mobileDrawer.classList.remove('open');
+    drawerOverlay.classList.remove('show');
+    hamburgerBtn.classList.remove('open');
+    hamburgerBtn.setAttribute('aria-expanded','false');
+    mobileDrawer.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+  window.closeDrawer = closeDrawer;
+
+  hamburgerBtn.addEventListener('click', ()=> mobileDrawer.classList.contains('open') ? closeDrawer() : openDrawer());
+  drawerOverlay.addEventListener('click', closeDrawer);
+  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  document.getElementById('drawerLogout').addEventListener('click',()=>{
+    localStorage.removeItem('user_email');
+    localStorage.removeItem('user_name');
+    window.location.href='login.html';
+  });
+  // Drawer language buttons
+  document.querySelectorAll('.drawer-lang-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      setLang(btn.dataset.lang);
+      document.querySelectorAll('.drawer-lang-btn').forEach(b=>b.classList.toggle('active', b===btn));
+    });
+  });
+  // Sync drawer lang active state on open
+  function syncDrawerLang(){
+    const l=getLang();
+    document.querySelectorAll('.drawer-lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  }
+  hamburgerBtn.addEventListener('click', syncDrawerLang);
+  // Close drawer on Escape
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDrawer(); });
+
+  // ── History with pagination ──
+  let histPage = 1;
+  async function loadHistory(page=1){
+    histPage = page;
+    const box=document.getElementById("historyContainer");
+    box.innerHTML='<div class="skeleton-list"><div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div></div>';
+    try{
+      const res=await fetch(`${API}/history?email=${encodeURIComponent(email)}&page=${page}&per_page=10`);
+      const data=await res.json();
+      if(!data.history||data.history.length===0){
+        box.innerHTML='<p class="history-empty">'+t('history_empty')+'</p>';return;
+      }
+      const totalPages=Math.ceil(data.total/10);
+      let html=`<div class="history-toolbar"><button class="btn-export" id="exportCsvBtn">${t('history_export')}</button></div>`;
+      html+=data.history.map(h=>{
+        const date=new Date(h.timestamp).toLocaleString();
+        const conf=h.confidence?`<span class="history-conf">${(h.confidence*100).toFixed(1)}%</span>`:'';
+        const isHealthy=h.prediction.toLowerCase().includes('healthy');
+        const sevBadge=isHealthy
+          ?`<span class="sev-none">${t('history_healthy')}</span>`
+          :`<span class="sev-high">${t('history_diseased')}</span>`;
+        return `<div class="history-row" data-ts="${h.timestamp}"><div style="flex:1;min-width:0"><div class="history-disease">${h.prediction.replace(/_/g,' ')}</div><div class="history-meta">${h.filename||''} &middot; ${date}</div></div><div class="history-actions">${sevBadge}${conf}<button class="btn-del" data-ts="${h.timestamp}">${t('history_delete')}</button></div></div>`;
+      }).join('');
+      // Pagination controls
+      if(totalPages>1){
+        html+=`<div class="pagination">`;
+        html+=`<button class="pg-btn" ${page<=1?'disabled':''} onclick="loadHistory(${page-1})">&#8592; Prev</button>`;
+        html+=`<span class="pg-info">Page ${page} / ${totalPages}</span>`;
+        html+=`<button class="pg-btn" ${page>=totalPages?'disabled':''} onclick="loadHistory(${page+1})">Next &#8594;</button>`;
+        html+=`</div>`;
+      }
+      box.innerHTML=html;
+      box.querySelectorAll('.btn-del').forEach(btn=>{
+        btn.addEventListener('click',async()=>{
+          if(!confirm(t('history_delete_confirm'))) return;
+          const form=new FormData();
+          form.append('email',email);form.append('timestamp',btn.dataset.ts);
+          await fetch(`${API}/history/delete`,{method:'DELETE',body:form});
+          toast('Record deleted','info');
+          loadHistory(histPage);
+        });
+      });
+      document.getElementById('exportCsvBtn').addEventListener('click',async()=>{
+        // Export all pages
+        const allRes=await fetch(`${API}/history?email=${encodeURIComponent(email)}&page=1&per_page=1000`);
+        const allData=await allRes.json();
+        const rows=[['Disease','Filename','Confidence','Date']];
+        allData.history.forEach(h=>rows.push([h.prediction.replace(/_/g,' '),h.filename||'',h.confidence?(h.confidence*100).toFixed(1)+'%':'',new Date(h.timestamp).toLocaleString()]));
+        const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+        const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='plantguard_history.csv';a.click();
+        toast('CSV exported!','success');
+      });
+    }catch{
+      box.innerHTML='<p class="history-empty" style="color:var(--red)">'+t('history_error')+'</p>';
+    }
+  }
+
+  let trendChart = null;
+  async function loadStats(){
+    const box=document.getElementById('statsContainer');
+    box.innerHTML='<div class="skeleton-list"><div class="skeleton-stat-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div></div>';
+    try{
+      const res=await fetch(`${API}/stats?email=${encodeURIComponent(email)}`);
+      const d=await res.json();
+      const healthyPct=d.total?Math.round(d.healthy/d.total*100):0;
+      const diseasedPct=d.total?Math.round(d.diseased/d.total*100):0;
+      const hRes=await fetch(`${API}/history?email=${encodeURIComponent(email)}&page=1&per_page=1000`);
+      const hData=await hRes.json();
+      const days=new Set((hData.history||[]).map(h=>new Date(h.timestamp).toDateString()));
+      const streak=days.size;
+      const streakHtml=`<div class="streak-banner"><div class="streak-fire">🔥</div><div class="streak-info"><div class="streak-num">${streak}</div><div class="streak-label">${streak!==1?t('stats_streak_labels'):t('stats_streak_label')}</div></div></div>`;
+      let topHtml=d.top_diseases.length
+        ?d.top_diseases.map((item,i)=>`<div class="top-disease-row"><span class="top-rank">${i+1}</span><span style="flex:1;margin:0 12px;font-weight:600;color:#0f172a">${item[0].replace(/___/g,' › ').replace(/_/g,' ')}</span><span style="color:#64748b;font-size:.8rem">${item[1]} ${item[1]>1?t('stats_scans'):t('stats_scan')}</span></div>`).join('')
+        :'<p class="history-empty" style="padding:16px 0">'+t('stats_no_disease')+'</p>';
+      // Trend chart
+      const trendData = d.trend || [];
+      const chartHtml = trendData.length >= 2 ? `<div style="margin:20px 0 8px;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b">${t('stats_trend')}</div><div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;margin-bottom:20px"><canvas id="trendChart" height="120"></canvas></div>` : '';
+      box.innerHTML=`${streakHtml}<div class="stats-grid"><div class="stat-card"><div class="s-num">${d.total}</div><div class="s-label">${t('stats_total')}</div></div><div class="stat-card"><div class="s-num" style="color:#059669">${d.healthy}</div><div class="s-label">${t('stats_healthy')} (${healthyPct}%)</div></div><div class="stat-card"><div class="s-num" style="color:#dc2626">${d.diseased}</div><div class="s-label">${t('stats_diseased')} (${diseasedPct}%)</div></div></div>${chartHtml}<div style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:12px">${t('stats_top')}</div>${topHtml}`;
+      if(trendData.length>=2){
+        if(trendChart){trendChart.destroy();trendChart=null;}
+        const ctx=document.getElementById('trendChart').getContext('2d');
+        trendChart=new Chart(ctx,{
+          type:'bar',
+          data:{
+            labels:trendData.map(([d])=>d.slice(5)),
+            datasets:[{label:'Scans',data:trendData.map(([,v])=>v),backgroundColor:'rgba(16,185,129,.7)',borderColor:'#059669',borderWidth:1,borderRadius:4}]
+          },
+          options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'#64748b'},grid:{color:'rgba(0,0,0,.05)'}},x:{ticks:{color:'#64748b'},grid:{display:false}}}}
+        });
+      }
+    }catch{
+      box.innerHTML='<p class="history-empty" style="color:var(--red)">'+t('stats_error')+'</p>';
+    }
+  }
+
+  // ── Lang change hook — reload dynamic content ──
+  function onLangChange() {
+    const activePage = ['detect','history','stats'].find(p =>
+      document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1)).classList.contains('active')
+    );
+    if (activePage === 'history') loadHistory(histPage);
+    if (activePage === 'stats')   loadStats();
+  }
+
+  // ── Topbar scroll glass effect ──
+  const _topbar = document.querySelector('.topbar');
+  window.addEventListener('scroll', () => {
+    _topbar.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+
+  // ── Scroll reveal ──
+  const _revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); _revealObs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.dashboard-card').forEach(el => {
+    el.classList.add('reveal'); _revealObs.observe(el);
+  });
+</script>
+</body>
+</html>

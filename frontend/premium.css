@@ -1,0 +1,420 @@
+/* ═══════════════════════════════════════════════════════
+   PLANTGUARD AI — PREMIUM PHYSICS & ADVANCED INTERACTIONS
+   premium.css  (loaded last, after animations.css)
+═══════════════════════════════════════════════════════ */
+
+/* ── SPRING EASING TOKENS ───────────────────────────── */
+:root {
+  --spring-bounce : cubic-bezier(0.34, 1.56, 0.64, 1);
+  --spring-smooth : cubic-bezier(0.22, 1.00, 0.36, 1);
+  --spring-snappy : cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-out-expo : cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ══════════════════════════════════════════════════════
+   1. PHYSICS-BASED BUTTON SPRING
+══════════════════════════════════════════════════════ */
+.btn-primary,
+.btn-secondary,
+.btn-camera,
+.btn-export,
+.btn-copy,
+.btn-logout,
+.pg-btn {
+  transition:
+    transform  0.35s var(--spring-bounce),
+    box-shadow 0.3s  var(--spring-smooth),
+    background 0.2s  ease,
+    opacity    0.2s  ease !important;
+}
+
+/* Magnetic wrapper — JS sets --mx/--my, CSS applies tilt */
+.btn-primary:not(:disabled) {
+  transform: translate(calc(var(--mx,0)*4px), calc(var(--my,0)*3px)) !important;
+}
+.btn-primary:not(:disabled):hover {
+  transform:
+    translate(calc(var(--mx,0)*6px), calc(var(--my,0)*4px))
+    translateY(-2px) scale(1.04) !important;
+  box-shadow:
+    0 8px 28px rgba(5,150,105,.5),
+    0 0 0 1px rgba(16,185,129,.35),
+    0 0 40px rgba(16,185,129,.15) !important;
+}
+.btn-primary:not(:disabled):active {
+  transform: scale(0.95) !important;
+  transition-duration: 0.1s !important;
+}
+
+/* Secondary magnetic tilt */
+.btn-secondary,
+.btn-camera {
+  transform: translate(calc(var(--mx,0)*4px), calc(var(--my,0)*3px)) !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   2. SUCCESS FEEDBACK
+══════════════════════════════════════════════════════ */
+@keyframes successPulse {
+  0%   { box-shadow: 0 0 0 0   rgba(16,185,129,.7); }
+  50%  { box-shadow: 0 0 0 18px rgba(16,185,129,.0); }
+  100% { box-shadow: 0 0 0 0   rgba(16,185,129,.0); }
+}
+@keyframes successBounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.04); }
+  60%  { transform: scale(0.98); }
+  80%  { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+@keyframes checkDraw {
+  from { stroke-dashoffset: 40; opacity: 0; }
+  to   { stroke-dashoffset: 0;  opacity: 1; }
+}
+
+.result-box.success-flash {
+  animation: successPulse 0.7s ease-out, successBounce 0.6s var(--spring-bounce);
+}
+
+/* Animated checkmark badge */
+.success-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #059669, #10b981);
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(16,185,129,.4);
+  flex-shrink: 0;
+  animation: successBounce 0.55s var(--spring-bounce) both;
+}
+.success-check svg {
+  width: 18px; height: 18px;
+  stroke: #fff; stroke-width: 2.5;
+  stroke-linecap: round; stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: checkDraw 0.45s var(--ease-out-expo) 0.15s forwards;
+}
+
+/* ══════════════════════════════════════════════════════
+   3. ERROR FEEDBACK
+══════════════════════════════════════════════════════ */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  15%     { transform: translateX(-8px) rotate(-1deg); }
+  30%     { transform: translateX(7px)  rotate(1deg); }
+  45%     { transform: translateX(-6px) rotate(-0.5deg); }
+  60%     { transform: translateX(5px)  rotate(0.5deg); }
+  75%     { transform: translateX(-3px); }
+  90%     { transform: translateX(2px); }
+}
+@keyframes errorPulse {
+  0%   { box-shadow: 0 0 0 0   rgba(239,68,68,.6); }
+  50%  { box-shadow: 0 0 0 16px rgba(239,68,68,.0); }
+  100% { box-shadow: 0 0 0 0   rgba(239,68,68,.0); }
+}
+
+.shake-error {
+  animation: shake 0.55s var(--spring-snappy) both,
+             errorPulse 0.6s ease-out both;
+}
+
+/* ══════════════════════════════════════════════════════
+   4. RIPPLE (upgraded — colour-aware)
+══════════════════════════════════════════════════════ */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: scale(0);
+  animation: rippleSpring 0.6s var(--spring-smooth) forwards;
+}
+.btn-primary .ripple   { background: rgba(255,255,255,.25); }
+.btn-secondary .ripple { background: rgba(16,185,129,.2); }
+.btn-logout .ripple    { background: rgba(239,68,68,.2); }
+
+@keyframes rippleSpring {
+  0%   { transform: scale(0);   opacity: 1; }
+  60%  { transform: scale(3.5); opacity: 0.4; }
+  100% { transform: scale(5);   opacity: 0; }
+}
+
+/* ══════════════════════════════════════════════════════
+   5. IMAGE HOVER DEPTH / PARALLAX TILT
+══════════════════════════════════════════════════════ */
+#previewWrap {
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
+#preview {
+  transition:
+    transform  0.4s var(--spring-smooth),
+    box-shadow 0.4s var(--spring-smooth) !important;
+  transform-origin: center center;
+  will-change: transform;
+}
+#previewWrap:hover #preview {
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.25),
+    0 0 0 2px rgba(16,185,129,.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   6. PROGRESS BAR — STEPPED AI SIMULATION
+══════════════════════════════════════════════════════ */
+.ai-progress-wrap {
+  margin: 16px 0 4px;
+}
+.ai-progress-track {
+  height: 6px;
+  background: rgba(16,185,129,.12);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.ai-progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #059669, #10b981, #6ee7b7);
+  background-size: 200% 100%;
+  width: 0%;
+  transition: width 0.6s var(--spring-smooth);
+  animation: barShimmer 2s linear infinite;
+  will-change: width;
+}
+.ai-progress-label {
+  font-size: .72rem;
+  font-weight: 600;
+  color: rgba(16,185,129,.8);
+  letter-spacing: .4px;
+  margin-top: 6px;
+  min-height: 1em;
+  transition: opacity 0.25s ease;
+}
+body.dark-mode .ai-progress-track { background: rgba(16,185,129,.08); }
+body.dark-mode .ai-progress-label { color: rgba(110,231,183,.7); }
+
+/* ══════════════════════════════════════════════════════
+   7. PAGE / TAB TRANSITIONS
+══════════════════════════════════════════════════════ */
+.page {
+  transition: opacity 0.28s var(--spring-smooth),
+              transform 0.28s var(--spring-smooth) !important;
+}
+.page-exit {
+  opacity: 0 !important;
+  transform: translateX(-18px) scale(0.99) !important;
+  pointer-events: none;
+}
+.page-enter {
+  animation: pageSlideIn 0.35s var(--spring-smooth) both !important;
+}
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateX(18px) scale(0.99); }
+  to   { opacity: 1; transform: translateX(0)    scale(1); }
+}
+
+/* ══════════════════════════════════════════════════════
+   8. GLASSMORPHISM CARDS — LIGHT REFLECTION
+══════════════════════════════════════════════════════ */
+.dashboard-card {
+  position: relative;
+  overflow: hidden;
+}
+/* Moving light sheen on hover */
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255,255,255,.04) 40%,
+    rgba(255,255,255,.10) 50%,
+    rgba(255,255,255,.04) 60%,
+    transparent 100%
+  );
+  background-size: 250% 250%;
+  background-position: 200% 200%;
+  transition: background-position 0.6s var(--spring-smooth);
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit;
+}
+.dashboard-card:hover::before {
+  background-position: -50% -50%;
+}
+
+/* Glass inner glow ring */
+.dashboard-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08),
+              inset 0 -1px 0 rgba(0,0,0,.1);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Always-on glass for the body panel */
+.dashboard-body-inner {
+  /* backdrop-filter removed — too expensive when always active */
+}
+
+/* Dark mode: stronger glass */
+body.dark-mode .dashboard-card {
+  backdrop-filter: blur(24px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+}
+body.dark-mode .dashboard-card::before {
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(16,185,129,.03) 40%,
+    rgba(110,231,183,.08) 50%,
+    rgba(16,185,129,.03) 60%,
+    transparent 100%
+  );
+  background-size: 250% 250%;
+  background-position: 200% 200%;
+}
+
+/* ══════════════════════════════════════════════════════
+   9. TOAST — SLIDE FROM TOP-RIGHT + SPRING
+══════════════════════════════════════════════════════ */
+#toast-container {
+  top: 80px !important;
+  bottom: auto !important;
+  right: 24px !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+.toast {
+  animation: toastSpringIn 0.45s var(--spring-bounce) both !important;
+  transform-origin: top right;
+}
+.toast.removing {
+  animation: toastSpringOut 0.3s var(--spring-smooth) forwards !important;
+}
+@keyframes toastSpringIn {
+  from { opacity: 0; transform: translateX(60px) scale(0.85) rotate(2deg); }
+  to   { opacity: 1; transform: translateX(0)    scale(1)    rotate(0deg); }
+}
+@keyframes toastSpringOut {
+  from { opacity: 1; transform: translateX(0)    scale(1); }
+  to   { opacity: 0; transform: translateX(60px) scale(0.9); }
+}
+.toast:hover {
+  transform: translateX(-3px) scale(1.02) !important;
+  transition: transform 0.2s var(--spring-bounce) !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   10. RESULT CARD — SPRING ENTRANCE + GLOW STATES
+══════════════════════════════════════════════════════ */
+#resultView.result-enter {
+  animation: resultSpring 0.55s var(--spring-bounce) both !important;
+}
+@keyframes resultSpring {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.93); }
+  60%  { opacity: 1; transform: translateY(-4px) scale(1.01); }
+  80%  { transform: translateY(2px) scale(0.995); }
+  100% { transform: translateY(0)   scale(1); }
+}
+
+/* Result header badge spring */
+.result-badge {
+  animation: badgePop 0.5s var(--spring-bounce) 0.2s both;
+}
+@keyframes badgePop {
+  from { opacity: 0; transform: scale(0.7) translateY(4px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+/* Result value text reveal */
+.result-value {
+  animation: textReveal 0.4s var(--ease-out-expo) 0.25s both;
+}
+@keyframes textReveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════
+   11. UPLOAD ZONE — SPRING SCALE
+══════════════════════════════════════════════════════ */
+.upload-zone {
+  transition:
+    border-color 0.25s ease,
+    background   0.25s ease,
+    transform    0.4s var(--spring-bounce),
+    box-shadow   0.3s ease !important;
+}
+.upload-zone:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+}
+.upload-zone.dragover {
+  transform: scale(1.025) !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   12. CARD ENTRANCE — STAGGER FOR HISTORY ROWS
+══════════════════════════════════════════════════════ */
+.history-row {
+  animation: rowSlideIn 0.35s var(--spring-smooth) both;
+}
+.history-row:nth-child(1)  { animation-delay: 0.04s; }
+.history-row:nth-child(2)  { animation-delay: 0.08s; }
+.history-row:nth-child(3)  { animation-delay: 0.12s; }
+.history-row:nth-child(4)  { animation-delay: 0.16s; }
+.history-row:nth-child(5)  { animation-delay: 0.20s; }
+.history-row:nth-child(6)  { animation-delay: 0.24s; }
+.history-row:nth-child(7)  { animation-delay: 0.28s; }
+.history-row:nth-child(8)  { animation-delay: 0.32s; }
+.history-row:nth-child(9)  { animation-delay: 0.36s; }
+.history-row:nth-child(10) { animation-delay: 0.40s; }
+@keyframes rowSlideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ══════════════════════════════════════════════════════
+   13. STAT CARDS — POP IN
+══════════════════════════════════════════════════════ */
+.stat-card {
+  animation: statPop 0.45s var(--spring-bounce) both;
+  transition: transform 0.3s var(--spring-bounce),
+              box-shadow 0.3s ease;
+}
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.12s; }
+.stat-card:nth-child(3) { animation-delay: 0.19s; }
+@keyframes statPop {
+  from { opacity: 0; transform: scale(0.88) translateY(10px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+.stat-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(16,185,129,.15);
+}
+
+/* ══════════════════════════════════════════════════════
+   14. MOBILE — REDUCE MOTION
+══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .dashboard-card::before { display: none; }
+  .stat-card:hover { transform: none; }
+  .upload-zone:hover { transform: none !important; }
+  #toast-container { right: 12px !important; top: 72px !important; }
+  .toast { max-width: calc(100vw - 24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

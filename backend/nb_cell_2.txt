@@ -1,0 +1,2 @@
+!pip install -q kaggle 'ml_dtypes>=0.5' -q
+print('✅ Done — click Runtime → Restart session, then continue from Step 2')

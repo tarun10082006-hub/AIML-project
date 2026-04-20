@@ -1,0 +1,11 @@
+import numpy as np
+
+model.save('model.keras')
+model.save('model.h5')
+print('✅ model.keras saved')
+print('✅ model.h5 saved')
+
+loaded = tf.keras.models.load_model('model.keras')
+preds  = loaded.predict(np.zeros((1, 224, 224, 3), dtype='float32'), verbose=0)
+assert preds.shape == (1, 15), f'❌ Expected (1,15), got {preds.shape}'
+print(f'✅ Sanity check passed — output shape: {preds.shape}')

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Profile – PlantGuard AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="ultra.css"/>
+  <style>
+    .profile-page{padding-top:calc(66px + 40px);padding-bottom:40px;display:flex;align-items:flex-start;justify-content:center;min-height:100vh;}
+    .profile-card{position:relative;z-index:1;width:min(520px,94vw);border-radius:var(--r-2xl);overflow:hidden;box-shadow:var(--shadow-xl),0 0 0 1px rgba(16,185,129,.1),var(--shadow-glow);margin:0;}
+    .profile-avatar-wrap{display:flex;flex-direction:column;align-items:center;padding:32px 0 20px;background:linear-gradient(135deg,#022c1a,#065f46);}
+    .profile-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#065f46,#10b981);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#fff;border:3px solid rgba(255,255,255,.2);box-shadow:0 4px 20px rgba(0,0,0,.3);}
+    .profile-name{color:#fff;font-size:1.1rem;font-weight:700;margin-top:12px;}
+    .profile-email{color:rgba(167,243,208,.7);font-size:.82rem;margin-top:4px;}
+    .profile-body{background:#fff;padding:32px 36px;}
+    .section-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #f1f5f9;}
+    .pw-strength{margin-top:6px;display:flex;gap:4px;align-items:center;}
+    .pw-bar{flex:1;height:3px;border-radius:2px;background:#e2e8f0;transition:background .3s;}
+    .pw-label{font-size:.7rem;font-weight:600;margin-left:6px;min-width:48px;color:var(--text-muted);}
+    .pw-weak .pw-bar:nth-child(1){background:#ef4444}
+    .pw-fair .pw-bar:nth-child(1),.pw-fair .pw-bar:nth-child(2){background:#f59e0b}
+    .pw-good .pw-bar:nth-child(1),.pw-good .pw-bar:nth-child(2),.pw-good .pw-bar:nth-child(3){background:#10b981}
+    .pw-strong .pw-bar{background:#059669}
+  </style>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+</div>
+<canvas id="natureCanvas" style="position:fixed;top:0;left:0;z-index:0;pointer-events:none;"></canvas>
+<svg class="leaf-decor tl" viewBox="0 0 400 400" fill="none"><path d="M30 370 Q60 40 370 30 Q310 160 180 240 Q90 290 30 370Z" fill="#059669" opacity=".9"/></svg>
+<svg class="leaf-decor br" viewBox="0 0 400 400" fill="none"><path d="M30 370 Q60 40 370 30 Q310 160 180 240 Q90 290 30 370Z" fill="#10b981" opacity=".85"/></svg>
+
+<nav class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-brand-icon">🌿</div>
+    <span>PlantGuard AI</span>
+  </div>
+  <div class="topbar-nav">
+    <div id="topbarUser" class="topbar-user" style="display:none">
+      <div class="topbar-avatar" id="topbarAvatar"></div>
+      <span id="topbarName"></span>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="te">తె</button>
+      <button class="lang-btn" data-lang="hi">हि</button>
+    </div>
+    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
+    <div class="desktop-nav">
+      <a href="index.html">🔬 Detector</a>
+      <a href="chatbot.html">🤖 Plant Doctor</a>
+      <a href="profile.html" class="active" style="padding:8px 12px">👤 Profile</a>
+      <button class="btn-logout" id="logoutBtn">🚪 Sign Out</button>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile drawer overlay -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<!-- Mobile drawer -->
+<aside class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+  <div class="drawer-header">
+    <div class="drawer-brand">
+      <div class="topbar-brand-icon" style="width:40px;height:40px;font-size:1rem">🌿</div>
+      <div>
+        <div style="color:#fff;font-weight:800;font-size:.95rem">PlantGuard AI</div>
+        <div id="drawerUserName" style="color:rgba(167,243,208,.7);font-size:.75rem;margin-top:1px"></div>
+      </div>
+    </div>
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
+  <div class="drawer-section-label">Navigation</div>
+  <nav class="drawer-nav">
+    <a href="index.html" class="drawer-link">
+      <span class="drawer-link-icon">🔬</span>
+      <span data-i18n="nav_detector">Detector</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="chatbot.html" class="drawer-link">
+      <span class="drawer-link-icon">🤖</span>
+      <span data-i18n="nav_doctor">Plant Doctor</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+    <a href="profile.html" class="drawer-link active">
+      <span class="drawer-link-icon">👤</span>
+      <span>Profile</span>
+      <span class="drawer-link-arrow">›</span>
+    </a>
+  </nav>
+  <div class="drawer-section-label" style="margin-top:8px">Language</div>
+  <div class="drawer-lang">
+    <button class="drawer-lang-btn" data-lang="en">🇬🇧 English</button>
+    <button class="drawer-lang-btn" data-lang="te">🇮🇳 తెలుగు</button>
+    <button class="drawer-lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+  </div>
+  <div class="drawer-footer">
+    <button class="drawer-logout" id="drawerLogout">
+      <span>🚪</span> <span data-i18n="nav_signout">Sign Out</span>
+    </button>
+  </div>
+</aside>
+
+<div class="profile-page">
+  <div class="profile-card">
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar" id="profileAvatar"></div>
+      <div class="profile-name" id="profileName"></div>
+      <div class="profile-email" id="profileEmail"></div>
+    </div>
+    <div class="profile-body">
+
+      <div class="section-title">👤 Change Display Name</div>
+      <div class="field">
+        <label>New display name</label>
+        <div class="input-wrap">
+          <span class="icon">👤</span>
+          <input type="text" id="newUsername" placeholder="Enter new name" autocomplete="name"/>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:24px">🔒 Change Password</div>
+      <div class="field">
+        <label>New password <span style="color:var(--text-muted);font-weight:400">(leave blank to keep current)</span></label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="newPassword" placeholder="Min. 8 characters" autocomplete="new-password"/>
+        </div>
+        <div class="pw-strength" id="pwStrength">
+          <div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div>
+          <span class="pw-label" id="pwLabel"></span>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:24px">🔑 Confirm Identity</div>
+      <div class="field">
+        <label>Current password <span style="color:#dc2626;font-size:.75rem">*required</span></label>
+        <div class="input-wrap">
+          <span class="icon">🔑</span>
+          <input type="password" id="currentPassword" placeholder="Your current password" autocomplete="current-password"/>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="saveBtn"><span id="saveText">Save Changes →</span></button>
+      <div class="msg" id="msg"></div>
+
+      <div style="text-align:center;margin-top:20px;font-size:.82rem">
+        <a href="index.html" style="color:#059669;font-weight:600;text-decoration:none">← Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="i18n.js"></script>
+<script src="nature.js"></script>
+<script>
+  initLangSwitcher();
+
+  const dt=document.getElementById('darkToggle');
+  if(localStorage.getItem('pg_dark')==='1'){document.body.classList.add('dark-mode');dt.textContent='☀️';}
+  dt.addEventListener('click',()=>{const on=document.body.classList.toggle('dark-mode');dt.textContent=on?'☀️':'🌙';localStorage.setItem('pg_dark',on?'1':'0');});
+
+  const email=localStorage.getItem('user_email');
+  if(!email)window.location.href='login.html';
+  const uname=localStorage.getItem('user_name')||'User';
+
+  document.getElementById('profileAvatar').textContent=uname.charAt(0).toUpperCase();
+  document.getElementById('profileName').textContent=uname;
+  document.getElementById('profileEmail').textContent=email;
+  document.getElementById('topbarUser').style.display='flex';
+  document.getElementById('topbarAvatar').textContent=uname.charAt(0).toUpperCase();
+  document.getElementById('topbarName').textContent='Hi, '+uname.split(' ')[0];
+
+  document.getElementById('newPassword').addEventListener('input',function(){
+    const v=this.value,s=document.getElementById('pwStrength'),l=document.getElementById('pwLabel');
+    let score=0;
+    if(v.length>=8)score++;if(/[A-Z]/.test(v))score++;if(/[0-9]/.test(v))score++;if(/[^A-Za-z0-9]/.test(v))score++;
+    s.className='pw-strength '+['','pw-weak','pw-fair','pw-good','pw-strong'][score];
+    l.textContent=['','Weak','Fair','Good','Strong'][score];
+    l.style.color=['','#ef4444','#f59e0b','#10b981','#059669'][score];
+  });
+
+  function toast(msg,type='success'){
+    const icons={success:'✅',error:'❌',info:'ℹ️'};
+    const c=document.getElementById('toast-container');
+    const el=document.createElement('div');
+    el.className=`toast toast-${type}`;
+    el.innerHTML=`<span class="toast-icon">${icons[type]}</span><span>${msg}</span>`;
+    c.appendChild(el);
+    el.addEventListener('click',()=>{el.classList.add('removing');setTimeout(()=>el.remove(),250);});
+    setTimeout(()=>{el.classList.add('removing');setTimeout(()=>el.remove(),250);},3500);
+  }
+
+  const API='http://127.0.0.1:8000';
+
+  document.getElementById('saveBtn').addEventListener('click',async()=>{
+    const newUsername=document.getElementById('newUsername').value.trim();
+    const newPassword=document.getElementById('newPassword').value;
+    const currentPassword=document.getElementById('currentPassword').value;
+    const msg=document.getElementById('msg');
+
+    if(!currentPassword){msg.className='msg error';msg.textContent=t('profile_err_curpw');return;}
+    if(!newUsername&&!newPassword){msg.className='msg error';msg.textContent=t('profile_err_nothing');return;}
+    if(newPassword&&newPassword.length<8){msg.className='msg error';msg.textContent=t('profile_err_short');return;}
+
+    const btn=document.getElementById('saveBtn'),btnText=document.getElementById('saveText');
+    btn.disabled=true;btnText.textContent=t('profile_saving');msg.className='msg';
+
+    try{
+      const form=new FormData();
+      form.append('email',email);
+      form.append('current_password',currentPassword);
+      if(newUsername)form.append('new_username',newUsername);
+      if(newPassword)form.append('new_password',newPassword);
+      const res=await fetch(`${API}/update-profile`,{method:'POST',body:form});
+      const data=await res.json();
+      if(res.ok){
+        if(data.username){localStorage.setItem('user_name',data.username);document.getElementById('profileName').textContent=data.username;document.getElementById('profileAvatar').textContent=data.username.charAt(0).toUpperCase();document.getElementById('topbarAvatar').textContent=data.username.charAt(0).toUpperCase();document.getElementById('topbarName').textContent='Hi, '+data.username.split(' ')[0];}
+        msg.className='msg success';msg.textContent=t('profile_success');
+        document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';document.getElementById('currentPassword').value='';
+        document.getElementById('pwStrength').className='pw-strength';document.getElementById('pwLabel').textContent='';
+        toast(t('profile_success'),'success');
+      }else{msg.className='msg error';msg.textContent=data.detail||'Update failed.';}
+    }catch{msg.className='msg error';msg.textContent=t('signup_error_server');}
+    btn.disabled=false;btnText.textContent=t('profile_save');
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click',()=>{localStorage.removeItem('user_email');localStorage.removeItem('user_name');window.location.href='login.html';});
+
+  // Hamburger / Drawer
+  const hamburgerBtn=document.getElementById('hamburgerBtn');
+  const mobileDrawer=document.getElementById('mobileDrawer');
+  const drawerOverlay=document.getElementById('drawerOverlay');
+  function openDrawer(){
+    mobileDrawer.classList.add('open');drawerOverlay.classList.add('show');
+    hamburgerBtn.classList.add('open');hamburgerBtn.setAttribute('aria-expanded','true');
+    mobileDrawer.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+    const n=localStorage.getItem('user_name');
+    document.getElementById('drawerUserName').textContent=n?'Hi, '+n.split(' ')[0]:'';
+    const l=getLang();
+    document.querySelectorAll('.drawer-lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  }
+  function closeDrawer(){
+    mobileDrawer.classList.remove('open');drawerOverlay.classList.remove('show');
+    hamburgerBtn.classList.remove('open');hamburgerBtn.setAttribute('aria-expanded','false');
+    mobileDrawer.setAttribute('aria-hidden','true');document.body.style.overflow='';
+  }
+  hamburgerBtn.addEventListener('click',()=>mobileDrawer.classList.contains('open')?closeDrawer():openDrawer());
+  drawerOverlay.addEventListener('click',closeDrawer);
+  document.getElementById('drawerClose').addEventListener('click',closeDrawer);
+  document.getElementById('drawerLogout').addEventListener('click',()=>{localStorage.removeItem('user_email');localStorage.removeItem('user_name');window.location.href='login.html';});
+  document.querySelectorAll('.drawer-lang-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{setLang(btn.dataset.lang);document.querySelectorAll('.drawer-lang-btn').forEach(b=>b.classList.toggle('active',b===btn));});
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+
+  // Topbar scroll glass
+  const _tb=document.querySelector('.topbar');
+  window.addEventListener('scroll',()=>_tb.classList.toggle('scrolled',window.scrollY>10),{passive:true});
+</script>
+</body>
+</html>

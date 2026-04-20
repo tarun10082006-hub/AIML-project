@@ -1,0 +1,8 @@
+# 🌿 PlantGuard AI — Model Training
+
+Uses **Colab's pre-installed TensorFlow** — no version pinning, no conflicts.
+
+### Before you start
+1. **Runtime → Change runtime type → T4 GPU** ✅
+2. Get `kaggle.json` from [kaggle.com/settings](https://www.kaggle.com/settings) → API → Create New Token
+3. Run cells **one by one in order**

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Reset Password – PlantGuard AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    #step2,#step3{display:none}
+    .otp-boxes{display:flex;gap:10px;justify-content:center;margin:20px 0}
+    .otp-boxes input{width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid var(--border);border-radius:var(--r-md);background:var(--off-white);color:var(--text-primary);outline:none;font-family:'Inter',sans-serif;transition:border-color .15s,box-shadow .15s}
+    .otp-boxes input:focus{border-color:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.1);background:#fff}
+    .otp-boxes input.filled{border-color:#10b981;background:#f0fdf4}
+    .resend-row{text-align:center;font-size:.82rem;color:var(--text-muted);margin-top:8px}
+    .resend-row button{background:none;border:none;color:#059669;font-weight:600;cursor:pointer;font-size:.82rem;font-family:'Inter',sans-serif;padding:0}
+    .resend-row button:disabled{color:var(--text-muted);cursor:default}
+    .step-indicator{display:flex;align-items:center;gap:8px;margin-bottom:28px}
+    .step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;transition:all .3s}
+    .step-dot.done{background:#059669;color:#fff}
+    .step-dot.active{background:#065f46;color:#fff;border:2px solid #10b981}
+    .step-dot.pending{background:#e2e8f0;color:#94a3b8}
+    .step-line{flex:1;height:2px;background:#e2e8f0;border-radius:1px;transition:background .3s}
+    .step-line.done{background:#059669}
+  </style>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+</div>
+<canvas id="natureCanvas" style="position:fixed;top:0;left:0;z-index:0;pointer-events:none;"></canvas>
+<svg class="leaf-decor tl" viewBox="0 0 400 400" fill="none"><path d="M30 370 Q60 40 370 30 Q310 160 180 240 Q90 290 30 370Z" fill="#059669" opacity=".9"/><path d="M30 370 Q200 200 370 30" stroke="#34d399" stroke-width="2.5" fill="none" opacity=".6"/></svg>
+<svg class="leaf-decor br" viewBox="0 0 400 400" fill="none"><path d="M30 370 Q60 40 370 30 Q310 160 180 240 Q90 290 30 370Z" fill="#10b981" opacity=".85"/></svg>
+
+<div class="auth-wrapper" style="align-self:center;margin:32px auto;">
+  <div class="auth-panel">
+    <div class="brand">
+      <div class="brand-logo">
+        <div class="brand-logo-icon">🌱</div>
+        <div><div class="brand-logo-text">PlantGuard AI</div></div>
+      </div>
+      <h2>Reset your password <em>securely</em></h2>
+      <p>We'll send a one-time code to your email to verify your identity before resetting your password.</p>
+    </div>
+    <div class="panel-features">
+      <div class="feature-item"><div class="feature-icon">🔐</div><span>OTP verified reset — no guessing</span></div>
+      <div class="feature-item"><div class="feature-icon">⏱️</div><span>Code expires in 10 minutes</span></div>
+      <div class="feature-item"><div class="feature-icon">✉️</div><span>Sent to your registered email</span></div>
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot pending" id="dot2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot pending" id="dot3">3</div>
+    </div>
+
+    <!-- STEP 1: Enter email -->
+    <div id="step1">
+      <div class="form-header">
+        <div class="eyebrow">🔑 Forgot password</div>
+        <h1>Reset your password</h1>
+        <p>Enter your registered email and we'll send you a verification code</p>
+      </div>
+      <div class="field">
+        <label>Email address</label>
+        <div class="input-wrap">
+          <span class="icon">✉️</span>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+      </div>
+      <button class="btn-primary" id="sendOtpBtn"><span id="sendOtpText">Send Reset Code →</span></button>
+      <div class="msg" id="msg1"></div>
+      <div class="form-footer"><span>Remember your password?</span> <a href="login.html">Sign in →</a></div>
+    </div>
+
+    <!-- STEP 2: OTP -->
+    <div id="step2">
+      <div class="form-header">
+        <div class="eyebrow">📨 Verify identity</div>
+        <h1>Enter OTP</h1>
+        <p style="font-size:.85rem;color:var(--text-secondary)">6-digit code sent to <strong id="otpEmailDisplay"></strong></p>
+      </div>
+      <div class="otp-boxes">
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+      </div>
+      <div class="resend-row">
+        <span id="timerText">Resend in <strong id="timerCount">120</strong>s</span>
+        <button id="resendBtn" disabled style="display:none">Resend Code</button>
+      </div>
+      <button class="btn-primary" id="verifyOtpBtn" style="margin-top:18px"><span id="verifyOtpText">Verify Code →</span></button>
+      <div class="msg" id="msg2"></div>
+      <div style="text-align:center;margin-top:16px"><a href="#" id="backBtn1" style="font-size:.82rem;color:#059669;font-weight:600;text-decoration:none">← Back</a></div>
+    </div>
+
+    <!-- STEP 3: New password -->
+    <div id="step3">
+      <div class="form-header">
+        <div class="eyebrow">🔒 New password</div>
+        <h1>Set new password</h1>
+        <p>Choose a strong password for your account</p>
+      </div>
+      <div class="field">
+        <label>New password</label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="newPassword" placeholder="Min. 8 characters" autocomplete="new-password"/>
+        </div>
+        <div class="pw-strength" id="pwStrength">
+          <div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div>
+          <span class="pw-label" id="pwLabel"></span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Confirm new password</label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="confirmPassword" placeholder="Repeat your password" autocomplete="new-password"/>
+        </div>
+      </div>
+      <button class="btn-primary" id="resetBtn"><span id="resetText">Reset Password →</span></button>
+      <div class="msg" id="msg3"></div>
+    </div>
+  </div>
+</div>
+
+<button class="dark-toggle" id="darkToggle" title="Toggle dark mode" style="position:fixed;top:16px;right:16px;z-index:200">🌙</button>
+
+<script>
+  const dt=document.getElementById('darkToggle');
+  if(localStorage.getItem('pg_dark')==='1'){document.body.classList.add('dark-mode');dt.textContent='☀️';}
+  dt.addEventListener('click',()=>{const on=document.body.classList.toggle('dark-mode');dt.textContent=on?'☀️':'🌙';localStorage.setItem('pg_dark',on?'1':'0');});
+
+  document.getElementById('newPassword').addEventListener('input',function(){
+    const v=this.value,s=document.getElementById('pwStrength'),l=document.getElementById('pwLabel');
+    let score=0;
+    if(v.length>=8)score++;if(/[A-Z]/.test(v))score++;if(/[0-9]/.test(v))score++;if(/[^A-Za-z0-9]/.test(v))score++;
+    s.className='pw-strength '+['','pw-weak','pw-fair','pw-good','pw-strong'][score];
+    l.textContent=['','Weak','Fair','Good','Strong'][score];
+    l.style.color=['','#ef4444','#f59e0b','#10b981','#059669'][score];
+  });
+
+  const digits=document.querySelectorAll('.otp-digit');
+  digits.forEach((inp,i)=>{
+    inp.addEventListener('input',()=>{inp.value=inp.value.replace(/\D/g,'');inp.classList.toggle('filled',inp.value!=='');if(inp.value&&i<digits.length-1)digits[i+1].focus();});
+    inp.addEventListener('keydown',(e)=>{if(e.key==='Backspace'&&!inp.value&&i>0){digits[i-1].value='';digits[i-1].classList.remove('filled');digits[i-1].focus();}});
+    inp.addEventListener('paste',(e)=>{e.preventDefault();const text=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);digits.forEach((d,j)=>{d.value=text[j]||'';d.classList.toggle('filled',!!d.value);});digits[Math.min(text.length,5)].focus();});
+  });
+  function getOtp(){return Array.from(digits).map(d=>d.value).join('');}
+  function clearOtp(){digits.forEach(d=>{d.value='';d.classList.remove('filled');});digits[0].focus();}
+
+  let timerInterval=null;
+  function startTimer(){
+    let secs=120;
+    document.getElementById('timerCount').textContent=secs;
+    document.getElementById('timerText').style.display='';
+    document.getElementById('resendBtn').style.display='none';
+    document.getElementById('resendBtn').disabled=true;
+    clearInterval(timerInterval);
+    timerInterval=setInterval(()=>{
+      secs--;document.getElementById('timerCount').textContent=secs;
+      if(secs<=0){clearInterval(timerInterval);document.getElementById('timerText').style.display='none';document.getElementById('resendBtn').style.display='';document.getElementById('resendBtn').disabled=false;}
+    },1000);
+  }
+
+  function setStep(n){
+    [1,2,3].forEach(i=>{document.getElementById('step'+i).style.display=i===n?'block':'none';});
+    [1,2,3].forEach(i=>{
+      const dot=document.getElementById('dot'+i);
+      if(i<n){dot.className='step-dot done';dot.textContent='✓';}
+      else if(i===n){dot.className='step-dot active';dot.textContent=i;}
+      else{dot.className='step-dot pending';dot.textContent=i;}
+    });
+    [1,2].forEach(i=>{const line=document.getElementById('line'+i);if(line)line.classList.toggle('done',i<n);});
+  }
+
+  const API='http://127.0.0.1:8000';
+
+  document.getElementById('sendOtpBtn').addEventListener('click',async()=>{
+    const email=document.getElementById('email').value.trim();
+    const msg=document.getElementById('msg1');
+    if(!email){msg.className='msg error';msg.textContent='Please enter your email.';return;}
+    const btn=document.getElementById('sendOtpBtn'),btnText=document.getElementById('sendOtpText');
+    btn.disabled=true;btnText.textContent='Sending…';msg.className='msg';
+    try{
+      const form=new FormData();form.append('email',email);
+      const res=await fetch(`${API}/send-reset-otp`,{method:'POST',body:form});
+      const data=await res.json();
+      if(res.ok){document.getElementById('otpEmailDisplay').textContent=email;setStep(2);startTimer();setTimeout(()=>digits[0].focus(),100);}
+      else{msg.className='msg error';msg.textContent=data.detail||'Failed to send OTP.';}
+    }catch{msg.className='msg error';msg.textContent='Cannot reach server.';}
+    btn.disabled=false;btnText.textContent='Send Reset Code →';
+  });
+
+  document.getElementById('resendBtn').addEventListener('click',async()=>{
+    const email=document.getElementById('email').value.trim();
+    const msg=document.getElementById('msg2');
+    document.getElementById('resendBtn').disabled=true;
+    try{
+      const form=new FormData();form.append('email',email);
+      const res=await fetch(`${API}/send-reset-otp`,{method:'POST',body:form});
+      const data=await res.json();
+      if(res.ok){msg.className='msg success';msg.textContent='✓ Code resent.';clearOtp();startTimer();}
+      else{msg.className='msg error';msg.textContent=data.detail||'Failed.';document.getElementById('resendBtn').disabled=false;}
+    }catch{msg.className='msg error';msg.textContent='Cannot reach server.';document.getElementById('resendBtn').disabled=false;}
+  });
+
+  let verifiedOtp='';
+  document.getElementById('verifyOtpBtn').addEventListener('click',async()=>{
+    const otp=getOtp();const msg=document.getElementById('msg2');
+    if(otp.length<6){msg.className='msg error';msg.textContent='Enter the complete 6-digit code.';return;}
+    const email=document.getElementById('email').value.trim();
+    const btn=document.getElementById('verifyOtpBtn'),btnText=document.getElementById('verifyOtpText');
+    btn.disabled=true;btnText.textContent='Verifying…';msg.className='msg';
+    try{
+      // Verify OTP server-side using a sentinel password that will be rejected by length check
+      // but OTP validity is checked first — use a real verify endpoint instead
+      const form=new FormData();
+      form.append('email',email);
+      form.append('otp',otp);
+      form.append('new_password','__verify_only__placeholder__');
+      const res=await fetch(`${API}/verify-reset-otp`,{method:'POST',body:form});
+      const data=await res.json();
+      if(res.ok){
+        verifiedOtp=otp;
+        clearInterval(timerInterval);
+        setStep(3);
+      }else{
+        msg.className='msg error';msg.textContent=data.detail||'Invalid or expired code.';
+        clearOtp();
+      }
+    }catch{msg.className='msg error';msg.textContent='Cannot reach server.';}
+    btn.disabled=false;btnText.textContent='Verify Code →';
+  });
+
+  document.getElementById('backBtn1').addEventListener('click',(e)=>{e.preventDefault();clearInterval(timerInterval);clearOtp();setStep(1);document.getElementById('msg2').textContent='';});
+
+  document.getElementById('resetBtn').addEventListener('click',async()=>{
+    const newPw=document.getElementById('newPassword').value;
+    const confirmPw=document.getElementById('confirmPassword').value;
+    const msg=document.getElementById('msg3');
+    if(newPw.length<8){msg.className='msg error';msg.textContent='Password must be at least 8 characters.';return;}
+    if(newPw!==confirmPw){msg.className='msg error';msg.textContent='Passwords do not match.';return;}
+    const btn=document.getElementById('resetBtn'),btnText=document.getElementById('resetText');
+    btn.disabled=true;btnText.textContent='Resetting…';msg.className='msg';
+    try{
+      const form=new FormData();
+      form.append('email',document.getElementById('email').value.trim());
+      form.append('otp',verifiedOtp);
+      form.append('new_password',newPw);
+      const res=await fetch(`${API}/reset-password`,{method:'POST',body:form});
+      const data=await res.json();
+      if(res.ok){msg.className='msg success';msg.textContent='✓ Password reset! Redirecting to login…';setTimeout(()=>window.location.href='login.html',1500);}
+      else{msg.className='msg error';msg.textContent=data.detail||'Reset failed. Please start over.';btn.disabled=false;btnText.textContent='Reset Password →';}
+    }catch{msg.className='msg error';msg.textContent='Cannot reach server.';btn.disabled=false;btnText.textContent='Reset Password →';}
+  });
+</script>
+</body>
+</html>

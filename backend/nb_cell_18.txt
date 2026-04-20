@@ -1,0 +1,8 @@
+callbacks = [
+    tf.keras.callbacks.EarlyStopping(patience=4, restore_best_weights=True, monitor='val_accuracy'),
+    tf.keras.callbacks.ReduceLROnPlateau(factor=0.3, patience=2, monitor='val_loss', verbose=1)
+]
+
+print('🚀 Phase 1: Training top layers...')
+history1 = model.fit(train_ds, validation_data=val_ds, epochs=10, callbacks=callbacks)
+print(f'✅ Phase 1 done — best val_accuracy: {max(history1.history["val_accuracy"]):.4f}')

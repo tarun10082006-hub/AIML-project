@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Create Account – PlantGuard AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="ultra.css"/>
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .auth-wrapper { animation: authEntrance var(--dur-slow,520ms) var(--ease-expo,cubic-bezier(.16,1,.3,1)) both; }
+    .field:nth-child(1) { animation: fieldIn .5s .08s cubic-bezier(.16,1,.3,1) both; }
+    .field:nth-child(2) { animation: fieldIn .5s .15s cubic-bezier(.16,1,.3,1) both; }
+    .field:nth-child(3) { animation: fieldIn .5s .22s cubic-bezier(.16,1,.3,1) both; }
+    .btn-primary        { animation: fieldIn .5s .30s cubic-bezier(.16,1,.3,1) both; }
+    @keyframes fieldIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .stat { transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease;cursor:default; }
+    .stat:hover { transform:translateY(-4px) scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.25); }
+    .feature-item { transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .2s ease;border-radius:12px;padding:13px 10px; }
+    .feature-item:hover { transform:translateX(6px);background:rgba(255,255,255,.06); }
+    /* Step transition */
+    #step1, #step2 { transition: opacity .35s cubic-bezier(.16,1,.3,1), transform .35s cubic-bezier(.16,1,.3,1); }
+    #step2{display:none;}
+    .otp-boxes{display:flex;gap:10px;justify-content:center;margin:20px 0;}
+    .otp-boxes input{
+      width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;
+      border:2px solid var(--border);border-radius:var(--r-md);background:var(--off-white);
+      color:var(--text-primary);outline:none;font-family:'Inter',sans-serif;
+      transition:border-color .15s,box-shadow .15s;
+    }
+    .otp-boxes input:focus{border-color:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.1);background:#fff;}
+    .otp-boxes input.filled{border-color:#10b981;background:#f0fdf4;}
+    .resend-row{text-align:center;font-size:.82rem;color:var(--text-muted);margin-top:8px;}
+    .resend-row button{background:none;border:none;color:#059669;font-weight:600;cursor:pointer;font-size:.82rem;font-family:'Inter',sans-serif;padding:0;}
+    .resend-row button:disabled{color:var(--text-muted);cursor:default;}
+    .step-indicator{display:flex;align-items:center;gap:8px;margin-bottom:28px;}
+    .step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;transition:all .3s;}
+    .step-dot.done{background:#059669;color:#fff;}
+    .step-dot.active{background:#065f46;color:#fff;border:2px solid #10b981;}
+    .step-dot.pending{background:#e2e8f0;color:#94a3b8;}
+    .step-line{flex:1;height:2px;background:#e2e8f0;border-radius:1px;transition:background .3s;}
+    .step-line.done{background:#059669;}
+    .otp-hint{text-align:center;font-size:.85rem;color:var(--text-secondary);margin-bottom:4px;}
+    .otp-hint strong{color:#065f46;}
+  </style>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+</div>
+<canvas id="natureCanvas" style="position:fixed;top:0;left:0;z-index:0;pointer-events:none;"></canvas>
+<div class="particles" id="particles" style="z-index: 1;"></div>
+
+<svg class="leaf-decor tl" viewBox="0 0 500 500" fill="none">
+  <defs><linearGradient id="stl" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#065f46"/></linearGradient></defs>
+  <path d="M40 460 Q80 30 460 40 Q380 200 210 300 Q100 360 40 460Z" fill="url(#stl)"/>
+  <path d="M40 460 Q250 250 460 40" stroke="#34d399" stroke-width="3" fill="none" opacity=".5"/>
+  <path d="M40 460 Q180 280 360 100" stroke="#6ee7b7" stroke-width="2" fill="none" opacity=".35"/>
+  <path d="M40 460 Q140 320 300 160" stroke="#a7f3d0" stroke-width="1.5" fill="none" opacity=".25"/>
+  <path d="M90 400 Q170 300 340 130" stroke="#a7f3d0" stroke-width="1" fill="none" opacity=".18"/>
+</svg>
+<svg class="leaf-decor tr" viewBox="0 0 500 500" fill="none">
+  <defs><linearGradient id="str" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#047857"/><stop offset="100%" stop-color="#10b981"/></linearGradient></defs>
+  <path d="M40 460 Q80 30 460 40 Q380 200 210 300 Q100 360 40 460Z" fill="url(#str)"/>
+  <path d="M40 460 Q250 250 460 40" stroke="#10b981" stroke-width="2.5" fill="none" opacity=".45"/>
+  <path d="M40 460 Q170 290 350 110" stroke="#6ee7b7" stroke-width="1.5" fill="none" opacity=".3"/>
+</svg>
+<svg class="leaf-decor bl" viewBox="0 0 500 500" fill="none">
+  <defs><linearGradient id="sbl" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#6ee7b7"/><stop offset="100%" stop-color="#059669"/></linearGradient></defs>
+  <path d="M40 460 Q80 30 460 40 Q380 200 210 300 Q100 360 40 460Z" fill="url(#sbl)"/>
+  <path d="M40 460 Q250 250 460 40" stroke="#a7f3d0" stroke-width="2" fill="none" opacity=".4"/>
+  <path d="M40 460 Q160 300 320 140" stroke="#d1fae5" stroke-width="1" fill="none" opacity=".3"/>
+</svg>
+<svg class="leaf-decor br" viewBox="0 0 500 500" fill="none">
+  <defs><linearGradient id="sbr" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#047857"/></linearGradient></defs>
+  <path d="M40 460 Q80 30 460 40 Q380 200 210 300 Q100 360 40 460Z" fill="url(#sbr)"/>
+  <path d="M40 460 Q250 250 460 40" stroke="#6ee7b7" stroke-width="2" fill="none" opacity=".45"/>
+</svg>
+<svg class="leaf-decor ml" viewBox="0 0 360 360" fill="none">
+  <path d="M30 330 Q60 30 330 30 Q280 160 150 230 Q75 270 30 330Z" fill="#065f46" opacity=".9"/>
+  <path d="M30 330 Q180 180 330 30" stroke="#34d399" stroke-width="2" fill="none" opacity=".4"/>
+</svg>
+<svg class="leaf-decor mr" viewBox="0 0 360 360" fill="none">
+  <path d="M30 330 Q60 30 330 30 Q280 160 150 230 Q75 270 30 330Z" fill="#059669" opacity=".85"/>
+  <path d="M30 330 Q180 180 330 30" stroke="#6ee7b7" stroke-width="2" fill="none" opacity=".35"/>
+</svg>
+
+<div class="auth-wrapper">
+  <div class="auth-panel">
+    <div class="brand">
+      <div class="brand-logo">
+        <div class="brand-logo-icon">🌱</div>
+        <div><div class="brand-logo-text">PlantGuard AI</div></div>
+      </div>
+      <h2>Start protecting your plants <em>today</em></h2>
+      <p>Join thousands of farmers and gardeners who trust PlantGuard AI to keep their plants healthy with cutting-edge AI technology.</p>
+      <div class="panel-stats">
+        <div class="stat"><div class="stat-num">10K+</div><div class="stat-label" data-i18n="panel_users">Users</div></div>
+        <div class="stat"><div class="stat-num">50K+</div><div class="stat-label" data-i18n="panel_scans">Scans</div></div>
+        <div class="stat"><div class="stat-num" data-i18n="panel_free">Free</div><div class="stat-label" data-i18n="panel_forever">Forever</div></div>
+      </div>
+    </div>
+    <div class="panel-features">
+      <div class="feature-item"><div class="feature-icon">🆓</div><span data-i18n="signup_feat_free">Completely free — no credit card needed</span></div>
+      <div class="feature-item"><div class="feature-icon">⚡</div><span data-i18n="signup_feat_instant">Instant AI diagnosis in under 3 seconds</span></div>
+      <div class="feature-item"><div class="feature-icon">💬</div><span data-i18n="signup_feat_chatbot">Plant Doctor AI chatbot included</span></div>
+      <div class="feature-item"><div class="feature-icon">🔐</div><span data-i18n="signup_feat_private">Your data is private &amp; secure</span></div>
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <div class="lang-switcher" style="border-color:rgba(16,185,129,.3)">
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="te">తె</button>
+        <button class="lang-btn" data-lang="hi">हि</button>
+      </div>
+    </div>
+
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot pending" id="dot2">2</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div id="step1">
+      <div class="form-header">
+        <div class="eyebrow" data-i18n="signup_eyebrow">🌿 Get started free</div>
+        <h1 data-i18n="signup_title">Create your account</h1>
+        <p data-i18n="signup_subtitle">Set up your PlantGuard AI account in under a minute</p>
+      </div>
+      <div class="field">
+        <label data-i18n="signup_name_label">Full name</label>
+        <div class="input-wrap"><span class="icon">👤</span>
+          <input type="text" id="username" placeholder="Your full name" autocomplete="name"/>
+        </div>
+      </div>
+      <div class="field">
+        <label data-i18n="signup_email_label">Email address</label>
+        <div class="input-wrap"><span class="icon">✉️</span>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+      </div>
+      <div class="field">
+        <label data-i18n="signup_password_label">Password</label>
+        <div class="input-wrap"><span class="icon">🔒</span>
+          <input type="password" id="password" placeholder="Min. 8 characters" autocomplete="new-password"/>
+        </div>
+        <div class="pw-strength" id="pwStrength">
+          <div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div>
+          <span class="pw-label" id="pwLabel"></span>
+        </div>
+      </div>
+      <button class="btn-primary" id="sendOtpBtn"><span id="sendOtpText">Send OTP →</span></button>
+      <div class="msg" id="msg1"></div>
+      <div class="divider" data-i18n="signup_or">or</div>
+      <div class="form-footer">
+        <span data-i18n="signup_have_account">Already have an account?</span> <a href="login.html" data-i18n="signup_signin">Sign in →</a>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2">
+      <div class="form-header">
+        <div class="eyebrow">🔑 Verify your email</div>
+        <h1>Enter OTP</h1>
+        <p class="otp-hint">We sent a 6-digit code to <strong id="otpEmailDisplay"></strong></p>
+      </div>
+      <div class="otp-boxes">
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+      </div>
+      <div class="resend-row">
+        <span id="timerText">Resend OTP in <strong id="timerCount">120</strong>s</span>
+        <button id="resendBtn" disabled style="display:none">Resend OTP</button>
+      </div>
+      <button class="btn-primary" id="verifyBtn" style="margin-top:18px"><span id="verifyText">Create Account →</span></button>
+      <div class="msg" id="msg2"></div>
+      <div style="text-align:center;margin-top:16px">
+        <a href="#" id="backBtn" style="font-size:.82rem;color:#059669;font-weight:600;text-decoration:none">← Back</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="dark-toggle" id="darkToggle" title="Toggle dark mode" style="position:fixed;top:16px;right:16px;z-index:200">🌙</button>
+
+<script src="i18n.js"></script>
+<script src="nature.js"></script>
+<script>
+  initLangSwitcher();
+  const dt = document.getElementById('darkToggle');
+  if (localStorage.getItem('pg_dark') === '1') { document.body.classList.add('dark-mode'); dt.textContent = '☀️'; }
+  dt.addEventListener('click', () => { const on = document.body.classList.toggle('dark-mode'); dt.textContent = on ? '☀️' : '🌙'; localStorage.setItem('pg_dark', on ? '1' : '0'); });
+
+  document.getElementById('password').addEventListener('input', function () {
+    const v = this.value, s = document.getElementById('pwStrength'), l = document.getElementById('pwLabel');
+    let sc = 0;
+    if (v.length >= 8) sc++; if (/[A-Z]/.test(v)) sc++; if (/[0-9]/.test(v)) sc++; if (/[^A-Za-z0-9]/.test(v)) sc++;
+    s.className = 'pw-strength ' + ['','pw-weak','pw-fair','pw-good','pw-strong'][sc];
+    l.textContent = ['','Weak','Fair','Good','Strong'][sc];
+    l.style.color = ['','#ef4444','#f59e0b','#10b981','#059669'][sc];
+  });
+
+  const digits = document.querySelectorAll('.otp-digit');
+  digits.forEach((inp, i) => {
+    inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/\D/g, '');
+      inp.classList.toggle('filled', inp.value !== '');
+      if (inp.value && i < digits.length - 1) digits[i + 1].focus();
+    });
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) { digits[i-1].value=''; digits[i-1].classList.remove('filled'); digits[i-1].focus(); }
+    });
+    inp.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const text = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+      digits.forEach((d,j) => { d.value=text[j]||''; d.classList.toggle('filled',!!d.value); });
+      digits[Math.min(text.length,5)].focus();
+    });
+  });
+
+  function getOtp() { return Array.from(digits).map(d=>d.value).join(''); }
+  function clearOtp() { digits.forEach(d=>{d.value='';d.classList.remove('filled');}); digits[0].focus(); }
+
+  let timerInterval = null;
+  function startTimer() {
+    let secs = 120;
+    document.getElementById('timerCount').textContent = secs;
+    document.getElementById('timerText').style.display = '';
+    document.getElementById('resendBtn').style.display = 'none';
+    document.getElementById('resendBtn').disabled = true;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      secs--;
+      document.getElementById('timerCount').textContent = secs;
+      if (secs <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('timerText').style.display = 'none';
+        document.getElementById('resendBtn').style.display = '';
+        document.getElementById('resendBtn').disabled = false;
+      }
+    }, 1000);
+  }
+
+  function showStep2(email) {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    document.getElementById('dot1').className = 'step-dot done'; document.getElementById('dot1').textContent = '✓';
+    document.getElementById('line1').classList.add('done');
+    document.getElementById('dot2').className = 'step-dot active';
+    document.getElementById('otpEmailDisplay').textContent = email;
+    startTimer(); setTimeout(() => digits[0].focus(), 100);
+  }
+
+  function showStep1() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('dot1').className = 'step-dot active'; document.getElementById('dot1').textContent = '1';
+    document.getElementById('line1').classList.remove('done');
+    document.getElementById('dot2').className = 'step-dot pending';
+    clearInterval(timerInterval); clearOtp();
+    document.getElementById('msg2').textContent = '';
+  }
+
+  const API = "http://127.0.0.1:8000";
+
+  document.getElementById('sendOtpBtn').addEventListener('click', async () => {
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const msg = document.getElementById('msg1');
+    if (!username) { msg.className='msg error'; msg.textContent=t('signup_error_name')||'Please enter your full name.'; return; }
+    if (!email)    { msg.className='msg error'; msg.textContent=t('signup_error_email'); return; }
+    if (password.length < 8) { msg.className='msg error'; msg.textContent=t('signup_error_short')||'Password must be at least 8 characters.'; return; }
+    const btn = document.getElementById('sendOtpBtn'), btnText = document.getElementById('sendOtpText');
+    btn.disabled = true; btnText.textContent = t('signup_sending'); msg.className = 'msg';
+    try {
+      const form = new FormData(); form.append('email', email);
+      const res = await fetch(`${API}/send-otp`, { method:'POST', body:form });
+      const data = await res.json();
+      if (res.ok) { showStep2(email); }
+      else { msg.className='msg error'; msg.textContent = data.detail||'Failed to send OTP.'; }
+    } catch { msg.className='msg error'; msg.textContent=t('signup_error_server'); }
+    btn.disabled = false; btnText.textContent = t('signup_send_otp');
+  });
+
+  document.getElementById('resendBtn').addEventListener('click', async () => {
+    const email = document.getElementById('email').value.trim();
+    const msg = document.getElementById('msg2'), btn = document.getElementById('resendBtn');
+    btn.disabled = true; msg.className = 'msg';
+    try {
+      const form = new FormData(); form.append('email', email);
+      const res = await fetch(`${API}/send-otp`, { method:'POST', body:form });
+      const data = await res.json();
+      if (res.ok) { msg.className='msg success'; msg.textContent=t('signup_otp_sent'); clearOtp(); startTimer(); }
+      else { msg.className='msg error'; msg.textContent=data.detail||'Failed to resend OTP.'; btn.disabled=false; }
+    } catch { msg.className='msg error'; msg.textContent='Cannot reach server.'; btn.disabled=false; }
+  });
+
+  document.getElementById('verifyBtn').addEventListener('click', async () => {
+    const otp = getOtp(), msg = document.getElementById('msg2');
+    if (otp.length < 6) { msg.className='msg error'; msg.textContent='Please enter the complete 6-digit OTP.'; return; }
+    const btn = document.getElementById('verifyBtn'), btnText = document.getElementById('verifyText');
+    btn.disabled = true; btnText.textContent = 'Creating account…'; msg.className = 'msg';
+    try {
+      const form = new FormData();
+      form.append('username', document.getElementById('username').value.trim());
+      form.append('email', document.getElementById('email').value.trim());
+      form.append('password', document.getElementById('password').value);
+      form.append('otp', otp);
+      const res = await fetch(`${API}/signup`, { method:'POST', body:form });
+      const data = await res.json();
+      if (res.ok) {
+        msg.className='msg success'; msg.textContent=t('signup_success');
+        clearInterval(timerInterval);
+        setTimeout(() => window.location.href='login.html', 1400);
+      } else {
+        msg.className='msg error'; msg.textContent=data.detail||'Invalid OTP. Please try again.';
+        clearOtp(); btn.disabled=false; btnText.textContent=t('signup_btn');
+      }
+    } catch { msg.className='msg error'; msg.textContent=t('signup_error_server'); btn.disabled=false; btnText.textContent=t('signup_btn'); }
+  });
+
+  document.getElementById('backBtn').addEventListener('click', (e) => { e.preventDefault(); showStep1(); });
+</script>
+</body>
+</html>

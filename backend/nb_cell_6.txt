@@ -1,0 +1,10 @@
+import os
+from google.colab import files
+
+print('👆 Click "Choose Files" and upload your kaggle.json')
+files.upload()
+
+os.makedirs('/root/.kaggle', exist_ok=True)
+os.rename('kaggle.json', '/root/.kaggle/kaggle.json')
+os.chmod('/root/.kaggle/kaggle.json', 0o600)
+print('✅ kaggle.json configured')

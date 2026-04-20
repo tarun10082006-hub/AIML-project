@@ -1,0 +1,55 @@
+import os, shutil, re
+
+YOUR_CLASSES = [
+    'Pepper__bell___Bacterial_spot',
+    'Pepper__bell___healthy',
+    'Potato___Early_blight',
+    'Potato___Late_blight',
+    'Potato___healthy',
+    'Tomato___Bacterial_spot',
+    'Tomato___Early_blight',
+    'Tomato___Late_blight',
+    'Tomato___Leaf_Mold',
+    'Tomato___Septoria_leaf_spot',
+    'Tomato___Spider_mites Two-spotted_spider_mite',
+    'Tomato___Target_Spot',
+    'Tomato___Tomato_Yellow_Leaf_Curl_Virus',
+    'Tomato___Tomato_mosaic_virus',
+    'Tomato___healthy',
+]
+
+def normalize(s):
+    return re.sub(r'[^a-z0-9]', '', s.lower())
+
+def find_match(cls, folder_list):
+    if cls in folder_list: return cls
+    nc = normalize(cls)
+    for f in folder_list:
+        if normalize(f) == nc: return f
+    for f in folder_list:
+        if nc in normalize(f) or normalize(f) in nc: return f
+    return None
+
+FILTERED_TRAIN = 'filtered/train'
+FILTERED_VAL   = 'filtered/valid'
+os.makedirs(FILTERED_TRAIN, exist_ok=True)
+os.makedirs(FILTERED_VAL,   exist_ok=True)
+
+avail_train = os.listdir(TRAIN_DIR)
+avail_val   = os.listdir(VAL_DIR)
+missing = []
+
+for cls in YOUR_CLASSES:
+    mt = find_match(cls, avail_train)
+    mv = find_match(cls, avail_val)
+    if mt:
+        shutil.copytree(os.path.join(TRAIN_DIR, mt), os.path.join(FILTERED_TRAIN, cls), dirs_exist_ok=True)
+        shutil.copytree(os.path.join(VAL_DIR,   mv), os.path.join(FILTERED_VAL,   cls), dirs_exist_ok=True)
+        print(f'✅ {cls}')
+    else:
+        missing.append(cls)
+        print(f'❌ NOT FOUND: {cls}')
+
+print(f'\n{15 - len(missing)}/15 classes ready')
+if missing:
+    raise RuntimeError(f'❌ Missing: {missing}')

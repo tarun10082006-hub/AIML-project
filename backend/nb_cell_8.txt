@@ -1,0 +1,9 @@
+import os
+
+print('📥 Downloading dataset (~1.5 GB)...')
+ret = os.system('kaggle datasets download -d vipoooool/new-plant-diseases-dataset')
+assert ret == 0, '❌ Download failed — check your kaggle.json is valid'
+
+print('📦 Extracting...')
+os.system('unzip -q new-plant-diseases-dataset.zip -d plantdata')
+print('✅ Dataset ready')

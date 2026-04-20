@@ -1,0 +1,7 @@
+## Step 13 — Download model files
+
+Place downloaded files in your local project:
+```
+backend/model/model.keras   ← primary
+backend/model/model.h5      ← fallback
+```

@@ -1,0 +1,17 @@
+import os
+
+TRAIN_DIR = VAL_DIR = None
+for root, dirs, _ in os.walk('plantdata'):
+    if 'train' in dirs and TRAIN_DIR is None:
+        TRAIN_DIR = os.path.join(root, 'train')
+    if 'valid' in dirs and VAL_DIR is None:
+        VAL_DIR = os.path.join(root, 'valid')
+
+assert TRAIN_DIR and os.path.isdir(TRAIN_DIR), '❌ train folder not found'
+assert VAL_DIR   and os.path.isdir(VAL_DIR),   '❌ valid folder not found'
+
+print(f'Train : {TRAIN_DIR}  ({len(os.listdir(TRAIN_DIR))} classes)')
+print(f'Valid : {VAL_DIR}   ({len(os.listdir(VAL_DIR))} classes)')
+print('\nAll available classes:')
+for c in sorted(os.listdir(TRAIN_DIR)):
+    print(' ', c)

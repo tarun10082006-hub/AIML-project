@@ -1,0 +1,550 @@
+/* ═══════════════════════════════════════════════════════════
+   PLANTGUARD AI — ULTRA PREMIUM DESIGN SYSTEM
+   Apple / Tesla inspired — ultra.css
+   Load LAST after all other stylesheets
+═══════════════════════════════════════════════════════════ */
+
+/* ── DESIGN TOKENS ──────────────────────────────────────── */
+:root {
+  /* SF Pro-like font stack */
+  --font-display : 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body    : 'SF Pro Text',    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Glass surfaces */
+  --glass-nav    : rgba(4, 12, 6, 0.72);
+  --glass-card   : rgba(255,255,255, 0.92);
+  --glass-dark   : rgba(8, 18, 10, 0.85);
+  --glass-border : rgba(16,185,129, 0.18);
+
+  /* Easing curves — Apple HIG */
+  --ease-spring  : cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth  : cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-expo    : cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-back    : cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* Durations */
+  --dur-fast   : 180ms;
+  --dur-normal : 320ms;
+  --dur-slow   : 520ms;
+
+  /* Shadows — layered like Apple */
+  --shadow-float : 0 2px 8px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.10), 0 24px 48px rgba(0,0,0,.08);
+  --shadow-lift  : 0 4px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.14), 0 40px 80px rgba(0,0,0,.12);
+  --shadow-glow  : 0 0 0 1px rgba(16,185,129,.2), 0 0 40px rgba(16,185,129,.18);
+}
+
+/* ── GLOBAL FONT UPGRADE ────────────────────────────────── */
+body { font-family: var(--font-body); letter-spacing: -0.01em; }
+h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.03em; }
+
+/* ═══════════════════════════════════════════════════════════
+   1. TOPBAR — Apple-style frosted glass
+═══════════════════════════════════════════════════════════ */
+.topbar {
+  height: 60px !important;
+  padding: 0 32px !important;
+  background: var(--glass-nav) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgba(255,255,255,.06) !important;
+  box-shadow: 0 1px 0 rgba(16,185,129,.08), 0 4px 24px rgba(0,0,0,.18) !important;
+  transition: background var(--dur-normal) var(--ease-smooth),
+              box-shadow var(--dur-normal) var(--ease-smooth) !important;
+  contain: layout style;
+}
+
+/* Scrolled state — darker glass */
+.topbar.scrolled {
+  background: rgba(2, 8, 4, 0.92) !important;
+  box-shadow: 0 1px 0 rgba(16,185,129,.12), 0 8px 32px rgba(0,0,0,.28) !important;
+}
+
+.topbar-brand {
+  gap: 10px !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.topbar-brand-icon {
+  width: 32px !important; height: 32px !important;
+  border-radius: 9px !important;
+  background: linear-gradient(145deg, #059669, #10b981) !important;
+  box-shadow: 0 2px 8px rgba(16,185,129,.4), inset 0 1px 0 rgba(255,255,255,.2) !important;
+  transition: transform var(--dur-normal) var(--ease-spring) !important;
+}
+.topbar-brand:hover .topbar-brand-icon {
+  transform: rotate(15deg) scale(1.08) !important;
+}
+
+/* Nav links — pill style */
+.desktop-nav a {
+  font-size: .82rem !important;
+  font-weight: 500 !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  letter-spacing: -0.01em !important;
+  transition: background var(--dur-fast) ease,
+              color var(--dur-fast) ease,
+              transform var(--dur-normal) var(--ease-spring) !important;
+  position: relative !important;
+}
+.desktop-nav a::after { display: none !important; } /* remove underline from animations.css */
+.desktop-nav a:hover {
+  background: rgba(16,185,129,.14) !important;
+  color: #fff !important;
+  transform: translateY(-1px) !important;
+}
+.desktop-nav a.active {
+  background: rgba(16,185,129,.2) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  box-shadow: 0 0 0 1px rgba(16,185,129,.3), 0 2px 8px rgba(16,185,129,.15) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   2. PAGE SLIDE TRANSITIONS — Tesla-style horizontal wipe
+═══════════════════════════════════════════════════════════ */
+.page {
+  transition: opacity var(--dur-normal) var(--ease-expo),
+              transform var(--dur-normal) var(--ease-expo) !important;
+}
+.page-exit-left {
+  opacity: 0 !important;
+  transform: translateX(-32px) scale(0.98) !important;
+  pointer-events: none !important;
+}
+.page-exit-right {
+  opacity: 0 !important;
+  transform: translateX(32px) scale(0.98) !important;
+  pointer-events: none !important;
+}
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(40px) scale(0.98); }
+  to   { opacity: 1; transform: translateX(0)    scale(1); }
+}
+@keyframes slideInFromLeft {
+  from { opacity: 0; transform: translateX(-40px) scale(0.98); }
+  to   { opacity: 1; transform: translateX(0)     scale(1); }
+}
+.page-enter-right { animation: slideInFromRight var(--dur-slow) var(--ease-expo) both !important; }
+.page-enter-left  { animation: slideInFromLeft  var(--dur-slow) var(--ease-expo) both !important; }
+
+/* ═══════════════════════════════════════════════════════════
+   3. DASHBOARD CARD — Apple-grade surface
+═══════════════════════════════════════════════════════════ */
+.dashboard-card {
+  background: var(--glass-card) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--shadow-lift), var(--shadow-glow) !important;
+  border: 1px solid rgba(255,255,255,.7) !important;
+  overflow: hidden !important;
+  transition: transform var(--dur-slow) var(--ease-spring),
+              box-shadow var(--dur-slow) var(--ease-smooth) !important;
+}
+.dashboard-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-lift),
+              0 0 0 1px rgba(16,185,129,.25),
+              0 0 60px rgba(16,185,129,.14) !important;
+}
+
+/* Hero gradient — richer depth */
+.dashboard-hero {
+  background: linear-gradient(145deg, #011a0a 0%, #022c1a 35%, #064e3b 65%, #0a6648 100%) !important;
+  padding: 36px 40px 28px !important;
+}
+.dashboard-hero h1 {
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+}
+.dashboard-body-inner {
+  padding: 32px 40px !important;
+  background: #fff !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   4. AUTH PAGES — Cinematic split layout
+═══════════════════════════════════════════════════════════ */
+.auth-wrapper {
+  width: min(1040px, 96vw) !important;
+  border-radius: 28px !important;
+  box-shadow: var(--shadow-lift), var(--shadow-glow) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  animation: authEntrance var(--dur-slow) var(--ease-expo) both !important;
+  margin: auto !important;
+  align-self: center !important;
+}
+@keyframes authEntrance {
+  from { opacity: 0; transform: translateY(32px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.auth-panel {
+  background: linear-gradient(155deg, #011a0a 0%, #022c1a 30%, #064e3b 60%, #0a6648 85%, #0d7a55 100%) !important;
+  border-radius: 28px 0 0 28px !important;
+  padding: 52px 44px !important;
+}
+.auth-panel::before {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(110,231,183,.22) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(2,44,26,.6) 0%, transparent 50%) !important;
+}
+
+.brand h2 {
+  font-size: 2.2rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.1 !important;
+}
+
+.auth-form-panel {
+  background: #fafafa !important;
+  border-radius: 0 28px 28px 0 !important;
+  padding: 52px 48px !important;
+}
+
+.form-header h1 {
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+}
+
+/* Input fields — Apple-style */
+.input-wrap input {
+  padding: 14px 16px 14px 46px !important;
+  border-radius: 12px !important;
+  border: 1.5px solid #e5e7eb !important;
+  font-size: .9rem !important;
+  background: #fff !important;
+  transition: border-color var(--dur-fast) ease,
+              box-shadow var(--dur-fast) ease,
+              transform var(--dur-normal) var(--ease-spring) !important;
+}
+.input-wrap input:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 4px rgba(16,185,129,.12) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   5. BUTTONS — Tesla-grade tactile feel
+═══════════════════════════════════════════════════════════ */
+.btn-primary {
+  border-radius: 14px !important;
+  font-size: .9rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  padding: 15px 24px !important;
+  background: linear-gradient(145deg, #065f46 0%, #059669 50%, #10b981 100%) !important;
+  box-shadow: 0 2px 8px rgba(5,150,105,.3),
+              0 8px 24px rgba(5,150,105,.2),
+              inset 0 1px 0 rgba(255,255,255,.15) !important;
+  transition: transform var(--dur-normal) var(--ease-spring),
+              box-shadow var(--dur-normal) var(--ease-smooth),
+              opacity var(--dur-fast) ease !important;
+}
+.btn-primary:not(:disabled):hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 4px 16px rgba(5,150,105,.4),
+              0 16px 40px rgba(5,150,105,.25),
+              inset 0 1px 0 rgba(255,255,255,.2) !important;
+}
+.btn-primary:not(:disabled):active {
+  transform: translateY(0) scale(0.98) !important;
+  transition-duration: 80ms !important;
+}
+
+.btn-secondary {
+  border-radius: 20px !important;
+  font-size: .82rem !important;
+  font-weight: 600 !important;
+  transition: transform var(--dur-normal) var(--ease-spring),
+              background var(--dur-fast) ease,
+              box-shadow var(--dur-normal) ease !important;
+}
+.btn-secondary:hover {
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(16,185,129,.15) !important;
+}
+.btn-secondary:active { transform: scale(0.97) !important; }
+
+/* ═══════════════════════════════════════════════════════════
+   6. UPLOAD ZONE — premium drag target
+═══════════════════════════════════════════════════════════ */
+.upload-zone {
+  border-radius: 18px !important;
+  border: 2px dashed rgba(16,185,129,.4) !important;
+  background: linear-gradient(145deg, #f0fdf4, #ecfdf5) !important;
+  transition: all var(--dur-normal) var(--ease-spring) !important;
+}
+.upload-zone:hover {
+  border-color: #10b981 !important;
+  background: linear-gradient(145deg, #dcfce7, #d1fae5) !important;
+  transform: translateY(-3px) scale(1.01) !important;
+  box-shadow: 0 8px 32px rgba(16,185,129,.18),
+              0 0 0 4px rgba(16,185,129,.08) !important;
+}
+.upload-zone.dragover {
+  border-color: #059669 !important;
+  transform: scale(1.03) !important;
+  box-shadow: 0 12px 40px rgba(16,185,129,.25),
+              0 0 0 6px rgba(16,185,129,.12) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   7. RESULT CARD — premium reveal
+═══════════════════════════════════════════════════════════ */
+.result-box {
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-float), var(--shadow-glow) !important;
+  border: 1px solid rgba(16,185,129,.12) !important;
+}
+.result-header {
+  background: linear-gradient(145deg, #011a0a, #022c1a, #064e3b) !important;
+  padding: 18px 24px !important;
+}
+.result-body { padding: 22px 24px !important; }
+.result-value {
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   8. HISTORY ROWS — card-style on hover
+═══════════════════════════════════════════════════════════ */
+.history-row {
+  border-radius: 12px !important;
+  padding: 14px 12px !important;
+  margin: 0 -12px !important;
+  transition: background var(--dur-fast) ease,
+              transform var(--dur-normal) var(--ease-spring),
+              box-shadow var(--dur-normal) ease !important;
+}
+.history-row:hover {
+  background: rgba(16,185,129,.05) !important;
+  transform: translateX(4px) !important;
+  box-shadow: inset 3px 0 0 #10b981 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   9. STAT CARDS — Apple widget style
+═══════════════════════════════════════════════════════════ */
+.stat-card {
+  border-radius: 18px !important;
+  background: linear-gradient(145deg, #f0fdf4, #ecfdf5) !important;
+  border: 1px solid rgba(16,185,129,.15) !important;
+  box-shadow: 0 2px 8px rgba(16,185,129,.08) !important;
+  transition: transform var(--dur-normal) var(--ease-spring),
+              box-shadow var(--dur-normal) ease !important;
+}
+.stat-card:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 8px 28px rgba(16,185,129,.2) !important;
+}
+.stat-card .s-num {
+  font-size: 2.2rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   10. TOAST — Apple notification style
+═══════════════════════════════════════════════════════════ */
+.toast {
+  border-radius: 16px !important;
+  padding: 14px 20px !important;
+  font-size: .85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2),
+              0 16px 40px rgba(0,0,0,.12),
+              0 0 0 1px rgba(255,255,255,.08) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   11. MOBILE DRAWER — premium slide
+═══════════════════════════════════════════════════════════ */
+.mobile-drawer {
+  border-radius: 24px 0 0 24px !important;
+  border-left: 1px solid rgba(16,185,129,.15) !important;
+  box-shadow: -32px 0 80px rgba(0,0,0,.5),
+              -1px 0 0 rgba(16,185,129,.1) !important;
+  transition: transform var(--dur-slow) var(--ease-expo) !important;
+}
+.mobile-drawer.open { transform: translateX(0) !important; }
+
+.drawer-link {
+  border-radius: 14px !important;
+  transition: background var(--dur-fast) ease,
+              transform var(--dur-normal) var(--ease-spring),
+              color var(--dur-fast) ease !important;
+}
+.drawer-link:hover {
+  transform: translateX(6px) !important;
+  background: rgba(16,185,129,.12) !important;
+}
+.drawer-link.active {
+  background: rgba(16,185,129,.2) !important;
+  box-shadow: inset 0 0 0 1px rgba(16,185,129,.3) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   12. HERO BADGE — animated pulse ring
+═══════════════════════════════════════════════════════════ */
+.hero-badge {
+  animation: badgeFloat 3s ease-in-out infinite !important;
+}
+@keyframes badgeFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-3px); }
+}
+.hero-dot {
+  box-shadow: 0 0 0 0 rgba(16,185,129,.6) !important;
+  animation: heroDotPulse 2s ease-out infinite !important;
+}
+@keyframes heroDotPulse {
+  0%   { box-shadow: 0 0 0 0   rgba(16,185,129,.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(16,185,129,.0); }
+  100% { box-shadow: 0 0 0 0   rgba(16,185,129,.0); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   13. DARK MODE — deep glass
+═══════════════════════════════════════════════════════════ */
+body.dark-mode .dashboard-card {
+  background: var(--glass-dark) !important;
+  border: 1px solid rgba(16,185,129,.12) !important;
+  box-shadow: var(--shadow-lift),
+              0 0 0 1px rgba(16,185,129,.1),
+              0 0 80px rgba(16,185,129,.06) !important;
+}
+body.dark-mode .dashboard-body-inner {
+  background: rgba(6, 14, 8, 0.9) !important;
+}
+body.dark-mode .auth-form-panel {
+  background: #0d1a10 !important;
+}
+body.dark-mode .input-wrap input {
+  background: #111f14 !important;
+  border-color: rgba(16,185,129,.2) !important;
+  color: #e2e8f0 !important;
+}
+body.dark-mode .input-wrap input:focus {
+  background: #162a1a !important;
+  border-color: #10b981 !important;
+}
+body.dark-mode .stat-card {
+  background: linear-gradient(145deg, rgba(16,185,129,.08), rgba(16,185,129,.04)) !important;
+  border-color: rgba(16,185,129,.15) !important;
+}
+body.dark-mode .result-body {
+  background: rgba(6, 14, 8, 0.95) !important;
+}
+body.dark-mode .history-row:hover {
+  background: rgba(16,185,129,.08) !important;
+}
+body.dark-mode .upload-zone {
+  background: linear-gradient(145deg, rgba(16,185,129,.07), rgba(16,185,129,.03)) !important;
+  border-color: rgba(16,185,129,.25) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BACKGROUND MESH GLOW — fills in when images don't load
+═══════════════════════════════════════════════════════════ */
+.bg::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(16,185,129,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 70%, rgba(5,150,105,.14) 0%, transparent 55%),
+    radial-gradient(ellipse at center, transparent 40%, rgba(0,10,4,.65) 100%) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   14. SCROLL REVEAL — elements animate in on scroll
+═══════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--dur-slow) var(--ease-expo),
+              transform var(--dur-slow) var(--ease-expo);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   15. CONFIDENCE BAR — premium gradient fill
+═══════════════════════════════════════════════════════════ */
+.confidence-bar {
+  height: 8px !important;
+  border-radius: 8px !important;
+  background: rgba(16,185,129,.1) !important;
+  overflow: hidden !important;
+  margin-top: 12px !important;
+}
+.confidence-fill {
+  height: 100% !important;
+  border-radius: 8px !important;
+  background: linear-gradient(90deg, #059669, #10b981, #6ee7b7) !important;
+  box-shadow: 0 0 10px rgba(16,185,129,.3) !important;
+  transition: width 1.2s var(--ease-expo) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   16. PROFILE CARD
+═══════════════════════════════════════════════════════════ */
+.profile-card {
+  border-radius: 24px !important;
+  box-shadow: var(--shadow-lift), var(--shadow-glow) !important;
+  border: 1px solid rgba(255,255,255,.6) !important;
+  overflow: hidden !important;
+  animation: authEntrance var(--dur-slow) var(--ease-expo) both !important;
+}
+.profile-avatar-wrap {
+  background: linear-gradient(145deg, #011a0a, #022c1a, #064e3b) !important;
+  padding: 36px 0 24px !important;
+}
+.profile-avatar {
+  width: 88px !important; height: 88px !important;
+  font-size: 2.2rem !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3),
+              0 0 0 3px rgba(255,255,255,.15) !important;
+  transition: transform var(--dur-normal) var(--ease-spring) !important;
+}
+.profile-avatar:hover { transform: scale(1.06) !important; }
+
+/* ═══════════════════════════════════════════════════════════
+   17. CHAT — premium bubble style
+═══════════════════════════════════════════════════════════ */
+.chat-wrapper {
+  border-radius: 24px !important;
+  box-shadow: var(--shadow-lift), var(--shadow-glow) !important;
+  border: 1px solid rgba(16,185,129,.1) !important;
+  overflow: hidden !important;
+}
+.chat-header {
+  background: linear-gradient(145deg, #011a0a, #022c1a, #064e3b) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   18. RESPONSIVE TWEAKS
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .topbar { padding: 0 16px !important; height: 56px !important; }
+  .dashboard-hero { padding: 28px 24px 22px !important; }
+  .dashboard-body-inner { padding: 24px !important; }
+  .auth-form-panel { padding: 36px 28px !important; }
+  .dashboard-card:hover { transform: none !important; }
+  .stat-card:hover { transform: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

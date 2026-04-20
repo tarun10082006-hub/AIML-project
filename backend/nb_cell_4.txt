@@ -1,0 +1,13 @@
+import tensorflow as tf
+import keras
+import numpy as np
+import sys
+
+print(f'Python     : {sys.version}')
+print(f'TensorFlow : {tf.__version__}')
+print(f'Keras      : {keras.__version__}')
+print(f'NumPy      : {np.__version__}')
+print(f'GPU        : {tf.config.list_physical_devices("GPU")}')
+
+assert tf.config.list_physical_devices('GPU'), '❌ No GPU — go to Runtime → Change runtime type → T4 GPU'
+print('\n✅ Environment ready')

@@ -1,0 +1,13 @@
+base.trainable = True
+for layer in base.layers[:-40]:
+    layer.trainable = False
+
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(1e-4),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+print('🚀 Phase 2: Fine-tuning...')
+history2 = model.fit(train_ds, validation_data=val_ds, epochs=10, callbacks=callbacks)
+print(f'✅ Phase 2 done — best val_accuracy: {max(history2.history["val_accuracy"]):.4f}')

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Sign In – PlantGuard AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="ultra.css"/>
+  <style>
+    /* ── Login page entrance ── */
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .auth-wrapper { animation: authEntrance var(--dur-slow,520ms) var(--ease-expo,cubic-bezier(.16,1,.3,1)) both; }
+    .auth-form-panel { position:relative; }
+    /* Floating label effect */
+    .field { position:relative; }
+    /* Slide-up stagger for form fields */
+    .field:nth-child(1) { animation: fieldIn .5s .1s var(--ease-expo,cubic-bezier(.16,1,.3,1)) both; }
+    .field:nth-child(2) { animation: fieldIn .5s .18s var(--ease-expo,cubic-bezier(.16,1,.3,1)) both; }
+    .btn-primary       { animation: fieldIn .5s .26s var(--ease-expo,cubic-bezier(.16,1,.3,1)) both; }
+    @keyframes fieldIn {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    /* Panel stat hover */
+    .stat { transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease; cursor:default; }
+    .stat:hover { transform:translateY(-4px) scale(1.04); box-shadow:0 8px 24px rgba(0,0,0,.25); }
+    /* Feature item hover */
+    .feature-item { transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .2s ease; border-radius:12px; padding:13px 10px; }
+    .feature-item:hover { transform:translateX(6px); background:rgba(255,255,255,.06); }
+  </style>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+  <div class="bg-slide"></div>
+</div>
+<canvas id="natureCanvas" style="position:fixed;top:0;left:0;z-index:0;pointer-events:none;"></canvas>
+<div class="particles" id="particles" style="z-index: 1;"></div>
+
+<svg class="leaf-decor tl" viewBox="0 0 500 500" fill="none">
+  <defs><linearGradient id="ltl" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#065f46"/></linearGradient></defs>
+  <path d="M40 460 Q80 30 460 40 Q380 200 210 300 Q100 360 40 460Z" fill="url(#ltl)"/>
+  <path d="M40 460 Q250 250 460 40" stroke="#34d399" stroke-width="3" fill="none" opacity=".5"/>
+  <path d="M40 460 Q180 280 360 100" stroke="#6ee7b7" stroke-width="2" fill="none" opacity=".35"/>
+  <path d="M40 460 Q140 320 300 160" stroke="#a7f3d0" stroke-width="1.5" fill="none" opacity=".25"/>
+  <path d="M90 400 Q170 300 340 130" stroke="#a7f3d0" stroke-width="1" fill="none" opacity=".18"/>
+</svg>
+<svg class="leaf-decor tr" viewBox="0 0 500 500" fill="none">
+  <defs><linearGradient id="ltr" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#047857"/><stop offset="100%" stop-color="#10b981"/></linearGradient></defs>
+  <path d="M40 460 Q80 30 460 40 Q380 200 210 300 Q100 360 40 460Z" fill="url(#ltr)"/>
+  <path d="M40 460 Q250 250 460 40" stroke="#10b981" stroke-width="2.5" fill="none" opacity=".45"/>
+  <path d="M40 460 Q170 290 350 110" stroke="#6ee7b7" stroke-width="1.5" fill="none" opacity=".3"/>
+  <path d="M90 400 Q180 290 340 130" stroke="#a7f3d0" stroke-width="1" fill="none" opacity=".2"/>
+</svg>
+<svg class="leaf-decor bl" viewBox="0 0 500 500" fill="none">
+  <defs><linearGradient id="lbl" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#6ee7b7"/><stop offset="100%" stop-color="#059669"/></linearGradient></defs>
+  <path d="M40 460 Q80 30 460 40 Q380 200 210 300 Q100 360 40 460Z" fill="url(#lbl)"/>
+  <path d="M40 460 Q250 250 460 40" stroke="#a7f3d0" stroke-width="2" fill="none" opacity=".4"/>
+  <path d="M40 460 Q160 300 320 140" stroke="#d1fae5" stroke-width="1" fill="none" opacity=".3"/>
+</svg>
+<svg class="leaf-decor br" viewBox="0 0 500 500" fill="none">
+  <defs><linearGradient id="lbr" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#047857"/></linearGradient></defs>
+  <path d="M40 460 Q80 30 460 40 Q380 200 210 300 Q100 360 40 460Z" fill="url(#lbr)"/>
+  <path d="M40 460 Q250 250 460 40" stroke="#6ee7b7" stroke-width="2" fill="none" opacity=".45"/>
+  <path d="M40 460 Q170 290 340 130" stroke="#a7f3d0" stroke-width="1.5" fill="none" opacity=".3"/>
+</svg>
+<svg class="leaf-decor ml" viewBox="0 0 360 360" fill="none">
+  <path d="M30 330 Q60 30 330 30 Q280 160 150 230 Q75 270 30 330Z" fill="#065f46" opacity=".9"/>
+  <path d="M30 330 Q180 180 330 30" stroke="#34d399" stroke-width="2" fill="none" opacity=".4"/>
+</svg>
+<svg class="leaf-decor mr" viewBox="0 0 360 360" fill="none">
+  <path d="M30 330 Q60 30 330 30 Q280 160 150 230 Q75 270 30 330Z" fill="#059669" opacity=".85"/>
+  <path d="M30 330 Q180 180 330 30" stroke="#6ee7b7" stroke-width="2" fill="none" opacity=".35"/>
+</svg>
+
+<button class="dark-toggle" id="darkToggle" type="button" title="Toggle dark mode" style="position:fixed;top:16px;right:16px;z-index:200">🌙</button>
+<div class="auth-wrapper">
+  <div class="auth-panel">
+    <div class="brand">
+      <div class="brand-logo">
+        <div class="brand-logo-icon">🌿</div>
+        <div><div class="brand-logo-text">PlantGuard AI</div></div>
+      </div>
+      <h2>Protect your crops with <em>AI precision</em></h2>
+      <p>Advanced deep learning technology that detects plant diseases instantly — keeping your harvest healthy and your yields high.</p>
+      <div class="panel-stats">
+        <div class="stat"><div class="stat-num">95%</div><div class="stat-label" data-i18n="panel_accuracy">Accuracy</div></div>
+        <div class="stat"><div class="stat-num">38</div><div class="stat-label" data-i18n="panel_diseases">Diseases</div></div>
+        <div class="stat"><div class="stat-num">&lt;3s</div><div class="stat-label" data-i18n="panel_results">Results</div></div>
+      </div>
+    </div>
+    <div class="panel-features">
+      <div class="feature-item"><div class="feature-icon">🔬</div><span data-i18n="login_feat_detect">AI-powered disease detection &amp; diagnosis</span></div>
+      <div class="feature-item"><div class="feature-icon">🤖</div><span data-i18n="login_feat_doctor">Plant Doctor AI for treatment guidance</span></div>
+      <div class="feature-item"><div class="feature-icon">📊</div><span data-i18n="login_feat_history">Full prediction history &amp; analytics</span></div>
+      <div class="feature-item"><div class="feature-icon">🔐</div><span data-i18n="login_feat_secure">Secure, private &amp; always free</span></div>
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <div class="lang-switcher" style="border-color:rgba(16,185,129,.3)">
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="te">తె</button>
+        <button class="lang-btn" data-lang="hi">हि</button>
+      </div>
+    </div>
+    <div class="form-header">
+      <div class="eyebrow" data-i18n="login_eyebrow">🌱 Welcome back</div>
+      <h1 data-i18n="login_title">Sign in to your account</h1>
+      <p data-i18n="login_subtitle">Enter your credentials to access your plant health dashboard</p>
+    </div>
+
+    <form id="loginForm" autocomplete="on">
+      <div class="field">
+        <label data-i18n="login_email_label">Email address</label>
+        <div class="input-wrap">
+          <span class="icon">✉️</span>
+          <input type="email" id="email" data-i18n-placeholder="login_email_placeholder" placeholder="you@example.com" autocomplete="email" required/>
+        </div>
+      </div>
+      <div class="field">
+        <label data-i18n="login_password_label">Password</label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="password" data-i18n-placeholder="login_password_placeholder" placeholder="Enter your password" autocomplete="current-password" required/>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" id="btn">
+        <span id="btnText" data-i18n="login_btn">Sign In →</span>
+      </button>
+    </form>
+
+    <div class="msg" id="msg"></div>
+    <div class="divider" data-i18n="login_or">or</div>
+    <div class="form-footer">
+      <span data-i18n="login_no_account">Don't have an account?</span> <a href="signup.html" data-i18n="login_create">Create one free →</a>
+    </div>
+  </div>
+</div>
+
+<script src="i18n.js"></script>
+<script src="nature.js"></script>
+<script>
+  initLangSwitcher();
+  const dt = document.getElementById('darkToggle');
+  if (localStorage.getItem('pg_dark') === '1') { document.body.classList.add('dark-mode'); dt.textContent = '☀️'; }
+  dt.addEventListener('click', () => { const on = document.body.classList.toggle('dark-mode'); dt.textContent = on ? '☀️' : '🌙'; localStorage.setItem('pg_dark', on ? '1' : '0'); });
+
+  const API = "http://127.0.0.1:8000";
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("btn"), btnText = document.getElementById("btnText"), msg = document.getElementById("msg");
+    btn.disabled = true; btnText.textContent = t('login_btn_loading');
+    msg.className = "msg"; msg.textContent = "";
+    const form = new FormData();
+    form.append("email", document.getElementById("email").value.trim());
+    form.append("password", document.getElementById("password").value);
+    try {
+      const res = await fetch(`${API}/login`, { method: "POST", body: form });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem("user_email", data.email);
+        if (data.username) localStorage.setItem("user_name", data.username);
+        msg.className = "msg success"; msg.textContent = t('login_success');
+        setTimeout(() => window.location.href = "index.html", 900);
+      } else {
+        msg.className = "msg error"; msg.textContent = data.detail || t('login_error_invalid');
+        btn.disabled = false; btnText.textContent = t('login_btn');
+      }
+    } catch {
+      msg.className = "msg error"; msg.textContent = t('login_error_server');
+      btn.disabled = false; btnText.textContent = t('login_btn');
+    }
+  });
+</script>
+</body>
+</html>
